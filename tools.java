@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.FontMetrics;
+import java.awt.Font;
 
 public class tools{
 	public static int intWidth;
@@ -38,17 +39,50 @@ public class tools{
 		
 	}
 	
-	public static void menu(Console con){
-		//Draw the first option
-		String[] arrMenuItems = {"-Play Game -", "- View Leaderboard -", "- Exit:(  - "};
-		int intButtonWidth = 300; 
-		int intButtonHeight = 60;
-		int intXButton = 350;
-		int intYButton = 200;
+	public static void menu3Buttons(Console con){
+		int intWidth = 300;
+		int intHeight = 60;
 		
-		for(int i = 0; i < arrMenuItems.length; i++){
-			
-		}
-	}
+		//set font
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD,35));
 
+	
+		//First button: Play Game (1)
+		con.setDrawColor(new Color(32,145,94));	//Dark Green
+		con.fillRoundRect(345,350, intWidth, intHeight ,50,50);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(345, 350, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("1 - Play Game", 390, 350);
+		
+		//Second Button: View Leaderboard (2)
+		con.setDrawColor(new Color(31, 46, 130)); // Blue
+		con.fillRoundRect(345, 450, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(345, 450, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("2 - Leaderboard", 370, 450);
+		
+		//Third Button: Quit (3)
+		con.setDrawColor(new Color(150, 20, 30)); // Red
+		con.fillRoundRect(345, 550, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(345, 550, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("3 - Quit", 435, 550);
+		
+		con.repaint();
+		
+	}
+	
+	public static void inputButton(Console con){
+		int intWidth = 300;
+		int intHeight = 60;
+		//Fourth Button: Input Button
+		con.setDrawColor(new Color(255, 255, 255)); // White
+		con.fillRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		
+	}
 }

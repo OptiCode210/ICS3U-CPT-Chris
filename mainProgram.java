@@ -9,8 +9,11 @@ public class mainProgram{
 		//call the logo image method
 		tools.logo(con);
 		
-		//call the menu options method
-		tools.menu(con);
+		//call the 3 menu options method
+		tools.menu3Buttons(con);
+		
+		//call the input menu method
+		tools.inputButton(con);
 		
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.Font;
 public class tools{
 	public static int intWidth;
 	public static int intHeight;
+	public static int intInput;
 	public static void logo(Console con) {
 		//loading the logo
         BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/logoFinal.png");
@@ -76,13 +77,56 @@ public class tools{
 	}
 	
 	public static void inputButton(Console con){
-		int intWidth = 300;
-		int intHeight = 60;
-		//Fourth Button: Input Button
-		con.setDrawColor(new Color(255, 255, 255)); // White
-		con.fillRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		int intX = 345;
+		int intY = 640;
+		int intW = 300;
+		int intH = 120; // Increased height
+
+		// Draw input box
+		con.setDrawColor(new Color(255, 253, 158)); // Yellow
+		con.fillRoundRect(intX, intY, intW, intH, 50, 50);
 		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		con.drawRoundRect(intX, intY, intW, intH, 50, 50);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.setDrawColor(Color.GRAY);
+		con.drawString("Enter 1 / 2 / 3:", 403, intY + 8);
 		
+		//Set the text cursor to the middle of the screen
+		con.setTextColor(Color.BLACK);
+		while (true) {
+			con.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + "                                         "
+				);	
+			int intInput = con.readInt();
+			
+			if (intInput != 1 || intInput != 2 || intInput != 3){
+				con.println("                                  Invalid choice.");
+				con.sleep(500);
+				con.clear();
+			}
+			else break;
+		}
+			 
+		if (intInput == 1) {
+			startGame(con);
+		} else if (intInput == 2) {
+			showLeaderboard(con);
+		} else if (intInput == 3) {
+			quitGame(con);
+		}
+    }
+	
+	public static void startGame(Console con){
+		//cover everything up
+		con.setDrawColor(Color.WHITE);
+		con.fillRect(0, 0, 1000, 800);
+		con.repaint();
+	}
+	
+	public static void showLeaderboard(Console con){
+		
+	}
+	
+	public static void quitGame(Console con){
+	
 	}
 }

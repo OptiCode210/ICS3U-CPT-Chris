@@ -9,7 +9,7 @@ public class tools{
 	public static int intHeight;
 	public static void logo(Console con) {
 		//loading the logo
-        BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/bjLogo.png");
+        BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/logoFinal.png");
         
         //centering the logo to the middle of the console
         int intWidth = imgLogo.getWidth();
@@ -22,17 +22,24 @@ public class tools{
         int intY = 10;
         
         //draw the image
-        con.drawImage(imgLogo,intX,intY);	
+        con.drawImage(imgLogo,intX,intY); 
         con.repaint();
     }
 	
 	public static void background(Console con){
+		//loading the image
 		BufferedImage imgBackground = con.loadImage(
 			"/Users/chrislau/Documents/CS/CPT/backgroundfinal.png"
 		);
 		
+		//drawing the background
 		con.drawImage(imgBackground,0,0);
 		con.repaint();
+		
+	}
+	
+	public static void menu(Console con){
+		//Draw the first option
 		
 	}
 

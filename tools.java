@@ -40,7 +40,15 @@ public class tools{
 	
 	public static void menu(Console con){
 		//Draw the first option
+		String[] arrMenuItems = {"-Play Game -", "- View Leaderboard -", "- Exit:(  - "};
+		int intButtonWidth = 300; 
+		int intButtonHeight = 60;
+		int intXButton = 350;
+		int intYButton = 200;
 		
+		for(int i = 0; i < arrMenuItems.length; i++){
+			
+		}
 	}
 
 }

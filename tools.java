@@ -120,6 +120,17 @@ public class tools{
 		con.setDrawColor(Color.WHITE);
 		con.fillRect(0, 0, 1000, 800);
 		con.repaint();
+		
+		//create dimensions for the name input box
+		int intBoxX = 350;
+		int intBoxY = 300;
+		int intBoxW = 300;
+		int intBoxH = 100;
+		
+		con.setDrawColor(new Color(200,255,255)); //Light blue
+		con.fillRoundRect(intBoxX, intBoxY, intBoxW, intBoxH, 40,40);
+		con.setDrawColor(Color.BLACK);
+		
 	}
 	
 	public static void showLeaderboard(Console con){

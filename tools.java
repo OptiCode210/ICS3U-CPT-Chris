@@ -29,7 +29,7 @@ public class tools{
     }
 	
 	public static void background(Console con){
-		//loading the image
+		//load the image
 		BufferedImage imgBackground = con.loadImage(
 			"/Users/chrislau/Documents/CS/CPT/bg3.jpg"
 		);
@@ -164,8 +164,22 @@ public class tools{
 	}
 	
 	public static void quitGame(Console con){
-		con.setDrawColor(Color.WHITE);
+	
+		//make a goodbye message
+		con.setDrawColor(Color.BLACK);
 		con.fillRect(0, 0, 1000, 800);
+		
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
+		con.setDrawColor(Color.WHITE);
+		con.drawString("THANKS FOR PLAYING", 200, 350);
+		
 		con.repaint();
+		
+		//make sure user reads the message before closing window
+		con.sleep(2000);
+		con.closeWindow();
+		
+		//closes the whole program
+		System.exit(0);
 	}
 }

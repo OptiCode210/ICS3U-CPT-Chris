@@ -31,7 +31,7 @@ public class tools{
 	public static void background(Console con){
 		//loading the image
 		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/backgroundfinal.png"
+			"/Users/chrislau/Documents/CS/CPT/bg3.jpg"
 		);
 		
 		//drawing the background
@@ -83,7 +83,7 @@ public class tools{
 		int intH = 120; // Increased height
 
 		// Draw input box
-		con.setDrawColor(new Color(255, 253, 158)); // Yellow
+		con.setDrawColor(new Color(255, 255, 255)); // White
 		con.fillRoundRect(intX, intY, intW, intH, 50, 50);
 		con.setDrawColor(Color.BLACK);
 		con.drawRoundRect(intX, intY, intW, intH, 50, 50);
@@ -138,6 +138,8 @@ public class tools{
 	}
 	
 	public static void quitGame(Console con){
-	
+		con.setDrawColor(Color.WHITE);
+		con.fillRect(0, 0, 1000, 800);
+		con.repaint();
 	}
 }

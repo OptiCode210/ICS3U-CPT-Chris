@@ -90,47 +90,73 @@ public class tools{
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
 		con.setDrawColor(Color.GRAY);
 		con.drawString("Enter 1 / 2 / 3:", 403, intY + 8);
-		
-		//Set the text cursor to the middle of the screen
 		con.setTextColor(Color.BLACK);
+		int intInput = 0;
+		
+		//While loop to cycle when inputting error values
 		while (true) {
-			con.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + "                                         "
+				con.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + "                                         "
 				);	
-			int intInput = con.readInt();
-			
-			if (intInput != 1 || intInput != 2 || intInput != 3){
-				con.println("                                  Invalid choice.");
-				con.sleep(500);
-				con.clear();
+				intInput = con.readInt();
+
+				if (intInput == 1 || intInput == 2 || intInput == 3) {
+					break;
+				} else {
+					con.println("Invalid input. Try again.");
+					con.sleep(1000);
+				}
 			}
-			else break;
-		}
-			 
-		if (intInput == 1) {
-			startGame(con);
-		} else if (intInput == 2) {
-			showLeaderboard(con);
-		} else if (intInput == 3) {
-			quitGame(con);
-		}
+
+			// Call the corresponding method
+			if (intInput == 1) {
+				startGame(con);
+			} else if (intInput == 2) {
+				showLeaderboard(con);
+			} else if (intInput == 3) {
+				quitGame(con);
+			}
     }
 	
 	public static void startGame(Console con){
+		//clear the screen of any text
+		con.clear();
+		
 		//cover everything up
-		con.setDrawColor(Color.WHITE);
-		con.fillRect(0, 0, 1000, 800);
+		BufferedImage imgBackground = con.loadImage("/Users/chrislau/Documents/CS/CPT/pokerbg.jpeg");
+		con.drawImage(imgBackground,0,0);
 		con.repaint();
 		
-		//create dimensions for the name input box
+		//Set box coordinates and dimensions
 		int intBoxX = 350;
 		int intBoxY = 300;
 		int intBoxW = 300;
-		int intBoxH = 100;
+		int intBoxH = 150;
 		
-		con.setDrawColor(new Color(200,255,255)); //Light blue
-		con.fillRoundRect(intBoxX, intBoxY, intBoxW, intBoxH, 40,40);
+		//create the input box
+		con.setDrawColor(new Color(77, 219, 115)); // Light green
+		con.fillRoundRect(intBoxX, intBoxY, intBoxW, intBoxH, 40, 40);
 		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(intBoxX, intBoxY, intBoxW, intBoxH, 40, 40);
 		
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 40));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Enter name: ", intBoxX+45, intBoxY +10 );
+		con.repaint();
+	
+		//Make the input area in the created box
+		for (int i = 0; i < 16; i++) {
+			con.println();
+		}
+		String strPadding = "                                      ";
+		con.print(strPadding);
+		String strName = con.readLine();
+		
+		//run the main logic method
+		tools.blackjack(con);
+	}
+	
+	public static void blackjack(Console con){
+	
 	}
 	
 	public static void showLeaderboard(Console con){

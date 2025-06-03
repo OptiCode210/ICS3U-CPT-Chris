@@ -9,6 +9,7 @@ public class tools{
 	public static int intWidth;
 	public static int intHeight;
 	public static int intInput;
+	public static String strName;
 	public static void logo(Console con) {
 		//loading the logo
         BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/logoFinal.png");
@@ -155,31 +156,56 @@ public class tools{
 		tools.blackjack(con);
 	}
 	
-	public static void blackjack(Console con){
-	
-	}
-	
-	public static void showLeaderboard(Console con){
-		
-	}
-	
 	public static void quitGame(Console con){
-	
-		//make a goodbye message
+		
+		//cover up everything and clear
+		con.clear();
 		con.setDrawColor(Color.BLACK);
 		con.fillRect(0, 0, 1000, 800);
 		
+		//Draw background image
+		BufferedImage imgBg = con.loadImage("/Users/chrislau/Documents/CS/CPT/backgroundmeme.jpeg");
+		con.drawImage(imgBg,0,0);
+		
+		//Set goodbye text
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
 		con.setDrawColor(Color.WHITE);
-		con.drawString("THANKS FOR PLAYING", 200, 350);
+		con.drawString("THANKS FOR PLAYING", 225, 200);
 		
 		con.repaint();
 		
 		//make sure user reads the message before closing window
-		con.sleep(2000);
+		con.sleep(3000);
 		con.closeWindow();
 		
 		//closes the whole program
 		System.exit(0);
 	}
+
+	public static void showLeaderboard(Console con){
+		//drawing background image
+		con.clear();
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/CS/CPT/leaderboard.jpeg"
+		);
+		con.drawImage(imgBackground,0,0);
+		con.repaint();
+		
+		//load the leaderboard file
+		TextInputFile txtLB = new TextInputFile("leaderboard.txt");
+		
+		while(!txtLB.eof()){
+			String strLine = txtLB.readLine();
+		}
+		
+		
+		
+		txtLB.close();
+		
+	}
+	
+	public static void blackjack(Console con){
+		
+	}
+	
 }

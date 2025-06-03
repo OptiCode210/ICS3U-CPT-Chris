@@ -201,7 +201,6 @@ public class tools{
 		
 		
 		txtLB.close();
-		
 	}
 	
 	public static void blackjack(Console con){

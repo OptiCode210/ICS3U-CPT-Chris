@@ -12,9 +12,5 @@ public class mainProgram{
 		//call the 3 menu options method
 		tools.menu3Buttons(con);
 		
-		//call the input menu method
-		tools.inputButton(con);
-		
-		
 	}
 }

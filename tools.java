@@ -75,8 +75,32 @@ public class tools{
 		
 		con.repaint();
 		
+		wordInput(con);
+		
 	}
 	
+	public static void wordInput(Console con){
+		while(true){
+			char chrInput = con.getChar();  //captures typed character
+			
+			//directs input to corresponding methods
+			if(chrInput == '1'){
+				startGame(con);
+				break;
+			}else if(chrInput == '2'){
+				showLeaderboard(con);
+				break;
+			}else if(chrInput == '3'){
+				quitGame(con);
+				break;
+			}
+			
+			//pause program for a bit between loop
+			con.sleep(50);
+		}
+	}	
+	
+	/* Input button method (unused)
 	public static void inputButton(Console con){
 		int intX = 345;
 		int intY = 640;
@@ -117,6 +141,7 @@ public class tools{
 				quitGame(con);
 			}
     }
+	*/
 	
 	public static void startGame(Console con){
 		//clear the screen of any text
@@ -196,6 +221,7 @@ public class tools{
 		
 		while(!txtLB.eof()){
 			String strLine = txtLB.readLine();
+			if(strLine == null || strLine.trim().equals("")) continue;
 		}
 		
 		

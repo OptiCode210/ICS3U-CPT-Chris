@@ -6,7 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Font;
 
 public class game{
-
+	//global variables
+	public static String strPlayerName = "";
+	
 	//main program:
 	public static void main(String args[]){
 		Console con = new Console(1000,800);
@@ -16,12 +18,24 @@ public class game{
 		
 	}
 	
-	//global variables
-	public static int intWidth;
-	public static int intHeight;
-	public static int intInput;
-	public static String strName = "";
 	
+	//mouse click program
+	public static boolean isClicked(Console con, int x, int y, int w, int h){
+		if (
+		con.currentMouseButton() == 0 &&
+		con.currentMouseX() >= x && con.currentMouseX() <= x + w &&
+		con.currentMouseY() >= y && con.currentMouseY() <= y + h
+		) {
+			// Wait until released
+			while (con.currentMouseButton() == 0) {
+				con.sleep(0);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+
 	//secondary programs:
 	public static void game(Console con){
 		background(con);
@@ -94,6 +108,7 @@ public class game{
 		con.drawString("3 - Quit", 435, 550);
 		
 		con.repaint();
+		
 	}
 	
 	public static void wordInput(Console con){
@@ -115,50 +130,7 @@ public class game{
 			//pause program for a bit between loop
 			con.sleep(50);
 		}
-	}	
-	
-	/* Input button method (unused)	
-	public static void inputButton(Console con){
-		int intX = 345;
-		int intY = 640;
-		int intW = 300;
-		int intH = 120; // Increased height
-
-		// Draw input box
-		con.setDrawColor(new Color(255, 255, 255)); // White
-		con.fillRoundRect(intX, intY, intW, intH, 50, 50);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(intX, intY, intW, intH, 50, 50);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.setDrawColor(Color.GRAY);
-		con.drawString("Enter 1 / 2 / 3:", 403, intY + 8);
-		con.setTextColor(Color.BLACK);
-		int intInput = 0;
-		
-		//While loop to cycle when inputting error values
-		while (true) {
-				con.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + "                                         "
-				);	
-				intInput = con.readInt();
-
-				if (intInput == 1 || intInput == 2 || intInput == 3) {
-					break;
-				} else {
-					con.println("Invalid input. Try again.");
-					con.sleep(1000);
-				}
-			}
-
-			// Call the corresponding method
-			if (intInput == 1) {
-				startGame(con);
-			} else if (intInput == 2) {
-				showLeaderboard(con);
-			} else if (intInput == 3) {
-				quitGame(con);
-			}
-    }
-	*/
+	}
 	
 	public static void startGame(Console con){
 		//clear the screen of any text
@@ -198,9 +170,12 @@ public class game{
 		String strPadding = "                                      ";
 		con.print(strPadding);
 		String strName = con.readLine();
+		con.repaint();
 		
 		//run the main logic method
-		blackjack(con);
+		if(strPlayerName != null){
+			blackjack(con);
+		}
 	}
 	
 	public static void quitGame(Console con){
@@ -268,9 +243,6 @@ public class game{
 			money[intCount] = intMoney;
 			intCount++;
 			
-			//test if the split function works
-			System.out.println(strName+ " <> " + intMoney);
-			
 		}
 		txtLB.close();
 		
@@ -301,45 +273,63 @@ public class game{
 		}
 		
 		//print the top 5
-		
 		con.setDrawColor(Color.WHITE);
 		// Row 1
 		if (intCount > 0) {
 			con.drawString("1st: ", 150, 220);
 			con.drawString(names[0], 280, 220);
-			con.drawString("$" + money[0], 620, 220);
+			con.drawString("$ " + money[0], 620, 220);
 		}
 		// Row 2
 		if (intCount > 1) {
 			con.drawString("2nd: ", 150, 290);
 			con.drawString(names[1], 280, 290);
-			con.drawString("$" + money[1], 620, 290);
+			con.drawString("$ " + money[1], 620, 290);
 		}
 		
 		// Row 3
 		if (intCount > 2) {
 			con.drawString("3rd: ", 150, 360);
 			con.drawString(names[2], 280, 360);
-			con.drawString("$" + money[2], 620, 360);
+			con.drawString("$ " + money[2], 620, 360);
 		}
 		// Row 4
 		if (intCount > 3) {
 			con.drawString("4th: ", 150, 430);
 			con.drawString(names[3], 280, 430);
-			con.drawString("$" + money[3], 620, 430);
+			con.drawString("$ " + money[3], 620, 430);
 		}
 		// Row 5
 		if (intCount > 4) {
 			con.drawString("5th: ", 150, 500);
 			con.drawString(names[4], 280, 500);
-			con.drawString("$" + money[4], 620, 500);
+			con.drawString("$ " + money[4], 620, 500);
 		}
 		
 		con.repaint();
+		
+		//create back button
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.WHITE);
+		con.drawString("Back", 870, 720);
+		con.repaint();
+		
+		//check if its clicked
+		while(true){
+			if(isClicked(con,820,720,150,50)){
+				game(con);
+				break;
+			}
+			con.sleep(10);
+		}
 	}
 	
 	public static void blackjack(Console con){
-			
+		
 	}
 	
 }

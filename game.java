@@ -5,11 +5,31 @@ import java.awt.image.BufferedImage;
 import java.awt.FontMetrics;
 import java.awt.Font;
 
-public class tools{
+public class game{
+
+	//main program:
+	public static void main(String args[]){
+		Console con = new Console(1000,800);
+		
+		//calls the main menu method
+		game.game(con);
+		
+	}
+	
+	//global variables
 	public static int intWidth;
 	public static int intHeight;
 	public static int intInput;
-	public static String strName;
+	public static String strName = "";
+	
+	//secondary programs:
+	public static void game(Console con){
+		background(con);
+		logo(con);
+		menu3Buttons(con);
+		wordInput(con);
+	}
+	
 	public static void logo(Console con) {
 		//loading the logo
         BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/logoFinal.png");
@@ -65,7 +85,7 @@ public class tools{
 		con.setDrawColor(Color.WHITE);
 		con.drawString("2 - Leaderboard", 370, 450);
 		
-		//Third Button: Quit (3)
+		//Third Button: Quit (3) 
 		con.setDrawColor(new Color(150, 20, 30)); // Red
 		con.fillRoundRect(345, 550, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.BLACK);
@@ -74,9 +94,6 @@ public class tools{
 		con.drawString("3 - Quit", 435, 550);
 		
 		con.repaint();
-		
-		wordInput(con);
-		
 	}
 	
 	public static void wordInput(Console con){
@@ -100,7 +117,7 @@ public class tools{
 		}
 	}	
 	
-	/* Input button method (unused)
+	/* Input button method (unused)	
 	public static void inputButton(Console con){
 		int intX = 345;
 		int intY = 640;
@@ -166,8 +183,13 @@ public class tools{
 		
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 40));
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Enter name: ", intBoxX+45, intBoxY +10 );
+		con.drawString(" Enter name: ", intBoxX+45, intBoxY +10 );
 		con.repaint();
+		
+		//Make "Welcome To BlackJack"
+		con.setDrawColor(Color.WHITE);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
+		con.drawString("WELCOME TO BLACKJACK", 80, 70);
 	
 		//Make the input area in the created box
 		for (int i = 0; i < 16; i++) {
@@ -178,7 +200,7 @@ public class tools{
 		String strName = con.readLine();
 		
 		//run the main logic method
-		tools.blackjack(con);
+		blackjack(con);
 	}
 	
 	public static void quitGame(Console con){
@@ -200,7 +222,7 @@ public class tools{
 		con.repaint();
 		
 		//make sure user reads the message before closing window
-		con.sleep(3000);
+		con.sleep(2000);
 		con.closeWindow();
 		
 		//closes the whole program
@@ -211,26 +233,113 @@ public class tools{
 		//drawing background image
 		con.clear();
 		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/leaderboard.jpeg"
+			"/Users/chrislau/Documents/CS/CPT/leaderboard.png"
 		);
 		con.drawImage(imgBackground,0,0);
 		con.repaint();
 		
+		//create the table titles
+		con.setDrawColor(new Color(227, 208, 64));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
+		con.drawString("Name", 275, 45);
+		con.drawString("Money", 615, 45);
+		
 		//load the leaderboard file
 		TextInputFile txtLB = new TextInputFile("leaderboard.txt");
 		
+		//create arrays to store values
+		String[] names = new String[100];
+		int[] money = new int[100];
+		int intCount = 0;
+		
 		while(!txtLB.eof()){
 			String strLine = txtLB.readLine();
-			if(strLine == null || strLine.trim().equals("")) continue;
+			if (strLine == null || strLine.trim().equals("")) continue;
+			
+			//split the line
+			String[] parts = strLine.split("-");
+			
+			//assign the splitted values to their own array
+			String strName = parts[0].trim();
+			int intMoney = Integer.parseInt(parts[1].trim());
+			
+			//saves value into array
+			names[intCount] = strName;
+			money[intCount] = intMoney;
+			intCount++;
+			
+			//test if the split function works
+			System.out.println(strName+ " <> " + intMoney);
+			
+		}
+		txtLB.close();
+		
+		//bubble sort the 2 arrays
+		for(int i = 0; i<intCount; i++){
+			for(int j = i + 1; j < intCount; j++){
+				if(money[j] > money[i]){
+					//switch values of money array
+					int intTMoney = money[i];
+					money[i] = money[j];
+					money[j] = intTMoney;
+					
+					//switch values of names array
+					String strTName = names[i];
+					names[i] = names[j];
+					names[j] = strTName;
+					
+				}
+			}
 		}
 		
 		
+		//test if the sorting worked
+		System.out.println("test is below: ");
+		System.out.println("count = " + intCount);
+		for(int x = 0; x < intCount; x++){
+			System.out.println(money[x] + " " + names[x]);
+		}
 		
-		txtLB.close();
+		//print the top 5
+		
+		con.setDrawColor(Color.WHITE);
+		// Row 1
+		if (intCount > 0) {
+			con.drawString("1st: ", 150, 220);
+			con.drawString(names[0], 280, 220);
+			con.drawString("$" + money[0], 620, 220);
+		}
+		// Row 2
+		if (intCount > 1) {
+			con.drawString("2nd: ", 150, 290);
+			con.drawString(names[1], 280, 290);
+			con.drawString("$" + money[1], 620, 290);
+		}
+		
+		// Row 3
+		if (intCount > 2) {
+			con.drawString("3rd: ", 150, 360);
+			con.drawString(names[2], 280, 360);
+			con.drawString("$" + money[2], 620, 360);
+		}
+		// Row 4
+		if (intCount > 3) {
+			con.drawString("4th: ", 150, 430);
+			con.drawString(names[3], 280, 430);
+			con.drawString("$" + money[3], 620, 430);
+		}
+		// Row 5
+		if (intCount > 4) {
+			con.drawString("5th: ", 150, 500);
+			con.drawString(names[4], 280, 500);
+			con.drawString("$" + money[4], 620, 500);
+		}
+		
+		con.repaint();
 	}
 	
 	public static void blackjack(Console con){
-		
+			
 	}
 	
 }

@@ -1,2 +1,4 @@
 Chris - 20000
-Chloe - 40
+hi - 40
+Max - 200
+me - 40

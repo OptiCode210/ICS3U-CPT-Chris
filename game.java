@@ -18,7 +18,6 @@ public class game{
 		
 	}
 	
-	
 	//mouse click program
 	public static boolean isClicked(Console con, int x, int y, int w, int h){
 		if (con.currentMouseButton() != 0){
@@ -90,7 +89,7 @@ public class game{
 		con.setDrawColor(Color.BLACK);
 		con.drawRoundRect(345, 350, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
-		con.drawString("1 - Play Game", 390, 350);
+		con.drawString("   Play Game", 390, 350);
 		
 		//Second Button: View Leaderboard (2)
 		con.setDrawColor(new Color(31, 46, 130)); // Blue
@@ -98,7 +97,7 @@ public class game{
 		con.setDrawColor(Color.BLACK);
 		con.drawRoundRect(345, 450, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
-		con.drawString("2 - Leaderboard", 370, 450);
+		con.drawString("   Leaderboard", 370, 450);
 		
 		//Third Button: Quit (3) 
 		con.setDrawColor(new Color(150, 20, 30)); // Red
@@ -106,7 +105,7 @@ public class game{
 		con.setDrawColor(Color.BLACK);
 		con.drawRoundRect(345, 550, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
-		con.drawString("3 - Quit", 435, 550);
+		con.drawString("   Quit", 435, 550);
 		
 		con.repaint();
 		
@@ -192,8 +191,10 @@ public class game{
 		}
 		String strPadding = "                                      ";
 		con.print(strPadding);
-		String strName = con.readLine();
+		String strPlayerName = con.readLine();
 		con.repaint();
+		
+		System.out.println("name: " + strPlayerName);
 		
 		//run the main logic method
 		if(strPlayerName != null){
@@ -295,38 +296,16 @@ public class game{
 			System.out.println(money[x] + " " + names[x]);
 		}
 		
+		
 		//print the top 5
 		con.setDrawColor(Color.WHITE);
-		// Row 1
-		if (intCount > 0) {
-			con.drawString("1st: ", 150, 220);
-			con.drawString(names[0], 280, 220);
-			con.drawString("$ " + money[0], 620, 220);
-		}
-		// Row 2
-		if (intCount > 1) {
-			con.drawString("2nd: ", 150, 290);
-			con.drawString(names[1], 280, 290);
-			con.drawString("$ " + money[1], 620, 290);
-		}
-		
-		// Row 3
-		if (intCount > 2) {
-			con.drawString("3rd: ", 150, 360);
-			con.drawString(names[2], 280, 360);
-			con.drawString("$ " + money[2], 620, 360);
-		}
-		// Row 4
-		if (intCount > 3) {
-			con.drawString("4th: ", 150, 430);
-			con.drawString(names[3], 280, 430);
-			con.drawString("$ " + money[3], 620, 430);
-		}
-		// Row 5
-		if (intCount > 4) {
-			con.drawString("5th: ", 150, 500);
-			con.drawString(names[4], 280, 500);
-			con.drawString("$ " + money[4], 620, 500);
+		for(int i = 0; i < 8; i++){
+			int DY = 170 + (i*70); //increments of 70 pixels
+			if (intCount > i) {
+				con.drawString(names[i], 280, DY);
+				con.drawString("$ " + money[i], 620, DY);
+				con.repaint();
+			}
 		}
 		
 		con.repaint();
@@ -356,7 +335,165 @@ public class game{
 	}
 	
 	public static void blackjack(Console con){
+	
+		//draw background image
+		con.clear();
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/CS/CPT/pokertable.jpeg"
+		);
+		con.drawImage(imgBackground,0,0);
 		
+		con.setDrawColor(new Color(255,215,0));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("  WELCOME", 400, 40);
+		con.repaint();
+		
+		deckArray(con);
+		
+		//create bet 10% button
+		con.setDrawColor(Color.WHITE);
+		con.fillRoundRect(80, 630, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(80, 630, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("  Bet 10%", 100, 630);
+		con.repaint();
+		
+		//30%
+		con.setDrawColor(Color.WHITE);
+		con.fillRoundRect(280, 630, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(280, 630, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("  Bet 30%", 300, 630);
+		con.repaint();
+		
+		//Hit
+		con.setDrawColor(Color.WHITE);
+		con.fillRoundRect(780, 600, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(780, 600, 150, 50, 20, 20);       
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("   Hit", 820, 600);
+		con.repaint();
+	
+		//Stand
+		con.setDrawColor(Color.WHITE);
+		con.fillRoundRect(780, 680, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(780, 680, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Stand", 825, 680);
+		con.repaint();
+		//input box
+		con.setDrawColor(Color.GRAY);
+		con.fillRoundRect(490, 600, 210, 130, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(490, 600, 210, 130, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 23));
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Custom% (1-100):", 500, 605);
+		con.repaint();
+		
+		//create padding
+		for(int i = 0; i < 27; i++){
+			con.println();
+		}
+		con.print("                                               ");
+		
+		int intCustP;
+		while(true){
+			intCustP = con.readInt();
+			
+			if(intCustP >= 0 && intCustP <= 100){
+				break;
+			}
+			con.println("                                           Invalid input");
+			con.sleep(500);
+			con.clear();	
+		}
+		
+		blackjackLogic(con);
 	}
 	
+	public static void deckArray(Console con){
+		
+		//create arrays for card values
+		int[][] intDeck = new int[52][3];
+		
+		//fill deck values
+		int intIndex = 0;
+		for(int intSuit = 1; intSuit <= 4; intSuit++){
+			for(int intValue = 1; intValue <= 13; intValue++){
+			
+				//column 0: card value
+				intDeck[intIndex][0] = intValue;
+				//column 1: suits
+				intDeck[intIndex][1] = intSuit;
+				//column 2: randint
+				intDeck[intIndex][2] = (int)(Math.random()*100) +1;
+				intIndex ++;
+				
+			}
+		}
+		
+		
+		/*
+		//array test
+		for(int intI = 0; intI < 52; intI++){
+			int intVal   = intDeck[intI][0];
+			int intSuitV = intDeck[intI][1];
+			int intKey   = intDeck[intI][2];
+			System.out.println(
+				" value: " + intVal +
+				", suit: "  + intSuitV +
+				", key: "   + intKey
+			);
+		}
+		*/
+		
+		
+		//create new array to store shuffled deck
+		int[][] intShuffled = new int[52][3];
+		for(int i = 0; i < 52; i ++){
+			intShuffled[i][0] = intDeck[i][0];
+			intShuffled[i][1] = intDeck[i][1];
+			intShuffled[i][2] = intDeck[i][2];
+			
+		}
+		
+		//bubble sort array to create random cards
+		for(int i = 0;  i < 52; i++){
+			for(int j = 0; j < 51 - i; j++){
+				if(intShuffled[j][2] > intShuffled[j + 1][2]){
+					int[] temp = intShuffled[j];
+					intShuffled[j] = intShuffled[j + 1];
+					intShuffled[j+1] = temp;
+ 				}
+			}
+		}
+		
+		
+		/*
+		//test if the array is sorted
+		System.out.println();
+		System.out.println("Shuffled deck: ");
+		for(int i=0; i<52; i++){
+			int val = intShuffled[i][0];
+			int suit = intShuffled[i][1];
+			int order = intShuffled[i][2];
+			System.out.println("Value: " + val + " Suit: " + suit + " Order: " + order);
+		}
+		*/
+		
+		
+	}
+
+	public static void blackjackLogic(Console con){
+		
+	}
 }

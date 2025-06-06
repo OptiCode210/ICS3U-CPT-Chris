@@ -2,3 +2,6 @@ Chris - 20000
 hi - 40
 Max - 200
 me - 40
+justin - 200
+jenice - 1000
+jet - 2802

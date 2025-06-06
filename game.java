@@ -8,6 +8,7 @@ import java.awt.Font;
 public class game{
 	//global variables
 	public static String strPlayerName = "";
+	public static BufferedImage[] imgCards = new BufferedImage[52];
 	
 	//main program:
 	public static void main(String args[]){
@@ -40,6 +41,7 @@ public class game{
 	public static void game(Console con){
 		background(con);
 		logo(con);
+		loadCards(con);
 		menu3Buttons(con);
 		//wordInput(con);
 	}
@@ -108,7 +110,6 @@ public class game{
 		con.drawString("   Quit", 435, 550);
 		
 		con.repaint();
-		
 		
 		while (con.currentMouseButton() == 0) {
 				con.sleep(10);
@@ -489,11 +490,23 @@ public class game{
 			System.out.println("Value: " + val + " Suit: " + suit + " Order: " + order);
 		}
 		*/
-		
-		
 	}
-
+	
+	public static void loadCards(Console con){
+		String folderPath = "/Users/chrislau/Documents/CS/CPT/cards";
+		String filePath;
+		//for loop to load cards
+		for(int i = 0; i < 52; i++){
+			filePath = folderPath + "/c" + i + ".png";
+			imgCards[i] = con.loadImage(filePath);
+		}
+		
+		//try out printing cards
+		//con.drawImage(imgCards[22],100,100);
+	}
+	
 	public static void blackjackLogic(Console con){
 		
 	}
+	
 }

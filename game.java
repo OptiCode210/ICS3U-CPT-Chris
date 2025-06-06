@@ -21,18 +21,19 @@ public class game{
 	
 	//mouse click program
 	public static boolean isClicked(Console con, int x, int y, int w, int h){
-		if (
-		con.currentMouseButton() == 0 &&
-		con.currentMouseX() >= x && con.currentMouseX() <= x + w &&
-		con.currentMouseY() >= y && con.currentMouseY() <= y + h
-		) {
-			// Wait until released
-			while (con.currentMouseButton() == 0) {
-				con.sleep(0);
-			}
-			return true;
+		if (con.currentMouseButton() != 0){
+			con.sleep(2);
 		}
-		return false;
+		
+		//capture press coordinates
+		int XCor = con.currentMouseX();
+		int YCor = con.currentMouseY();
+		
+		if (con.currentMouseButton() != 0){
+			con.sleep(2);
+		}
+		
+		return (XCor >= x && XCor < x + w && YCor >= y && YCor < y + h);
 	}
 	
 
@@ -41,7 +42,7 @@ public class game{
 		background(con);
 		logo(con);
 		menu3Buttons(con);
-		wordInput(con);
+		//wordInput(con);
 	}
 	
 	public static void logo(Console con) {
@@ -108,6 +109,28 @@ public class game{
 		con.drawString("3 - Quit", 435, 550);
 		
 		con.repaint();
+		
+		
+		while (con.currentMouseButton() == 0) {
+				con.sleep(10);
+			}
+		
+		while(true){
+			
+			con.repaint();
+			
+			if(isClicked(con, 345, 350, intWidth, intHeight)){
+				startGame(con);
+				break;
+			} else if(isClicked(con, 345, 450, intWidth, intHeight)){
+				showLeaderboard(con);
+				break;
+			} else if(isClicked(con, 345, 550, intWidth, intHeight)){
+				quitGame(con);
+				break;
+			}
+			con.sleep(2);
+		}
 		
 	}
 	
@@ -315,16 +338,20 @@ public class game{
 		con.drawRoundRect(820, 720, 150, 50, 20, 20);
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
 		con.setDrawColor(Color.WHITE);
-		con.drawString("Back", 870, 720);
+		con.drawString("e - Back", 855, 725);
 		con.repaint();
 		
-		//check if its clicked
 		while(true){
-			if(isClicked(con,820,720,150,50)){
+			char chrInput = con.getChar();  //captures typed character
+			
+			//directs input to corresponding methods
+			if(chrInput == 'e'){
 				game(con);
 				break;
 			}
-			con.sleep(10);
+			
+			//pause program for a bit between loop
+			con.sleep(50);
 		}
 	}
 	

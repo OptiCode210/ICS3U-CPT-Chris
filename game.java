@@ -491,7 +491,7 @@ public class game{
 		}
 		
 		//try out printing cards
-		//con.drawImage(imgCards[22],100,100);
+		//con.drawImage(imgCards[50],100,100);
 	}
 	
 	public static void bjBetInterface(Console con){
@@ -678,6 +678,8 @@ public class game{
 		    con.repaint();
 			bjBetRedInterface(con); //buttons become red after you click it
 			
+			con.sleep(1000);
+			
 			//deal cards
 			BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
 			loadCards(con);
@@ -696,19 +698,59 @@ public class game{
 			}
 			
 			//make the dealed cards visible
-			int intX = 200;
-			for(int j = 0; j < intPCardCount; j++){
-				int value = arrPlayer[j][0];
-				int suit = arrPlayer[j][1];
-				
-				//create index for the card
-				int index = (suit -1)*13 +(value -1);
-				con.drawImage(imgCards[index], intX, 400);
+			
+			//dealer
+			int intDX = 100, intDY = 350;
+			for (int j = 0; j < intDCardCount; j++) {
+				if (j == 1) {
+					// covered card
+					con.drawImage(imgDeck, intDX, intDY);
+				} else {
+					// face-up card
+					int value = arrDealer[j][0];
+					int suit  = arrDealer[j][1];
+					int index = (suit - 1) * 13 + (value - 1);
+					con.drawImage(imgCards[index], intDX, intDY);
+				}
+				intDX += 70;
+				intDY += 10;
+				con.repaint();
+				con.sleep(500);
 			}
+			
+			//player
+			int intPX = 570;
+			int intPY = 350;
+			for (int j = 0; j < intPCardCount; j++) {
+				int value = arrPlayer[j][0];
+				int suit  = arrPlayer[j][1];
+				int index = (suit - 1) * 13 + (value - 1);
+				con.drawImage(imgCards[index], intPX, intPY);
+				intPX += 70;
+				intPY += 10;
+				con.repaint();
+				con.sleep(500);
+			}
+			
+			hitStand(con);
 			
 			break;
 			
 		}
+	}
+	
+	public static void hitStand(Console con){
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(500, 620, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("       Hit   ", 500, 620);
+		con.repaint();
+		
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(700, 620, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("     Stand   ", 700, 620);
+		con.repaint();
 	}
 	
 	

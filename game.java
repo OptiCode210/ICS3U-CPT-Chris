@@ -52,7 +52,7 @@ public class game{
 	
 	public static void logo(Console con) {
 		//loading the logo
-        BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/CS/CPT/logoFinal.png");
+        BufferedImage imgLogo = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/logoFinal.png");
         
         //centering the logo to the middle of the console
         int intWidth = imgLogo.getWidth();
@@ -72,7 +72,7 @@ public class game{
 	public static void background(Console con){
 		//load the image
 		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/bg3.jpg"
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/bg3.jpg"
 		);
 		
 		//drawing the background
@@ -164,7 +164,7 @@ public class game{
 		con.clear();
 		
 		//cover everything up
-		BufferedImage imgBackground = con.loadImage("/Users/chrislau/Documents/CS/CPT/pokerbg.jpeg");
+		BufferedImage imgBackground = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/pokerbg.jpeg");
 		con.drawImage(imgBackground,0,0);
 		con.repaint();
 		
@@ -215,7 +215,7 @@ public class game{
 		con.fillRect(0, 0, 1000, 800);
 		
 		//Draw background image
-		BufferedImage imgBg = con.loadImage("/Users/chrislau/Documents/CS/CPT/backgroundmeme.jpeg");
+		BufferedImage imgBg = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backgroundmeme.jpeg");
 		con.drawImage(imgBg,0,0);
 		
 		//Set goodbye text
@@ -237,7 +237,7 @@ public class game{
 		//drawing background image
 		con.clear();
 		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/leaderboard.png"
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/leaderboard.png"
 		);
 		con.drawImage(imgBackground,0,0);
 		con.repaint();
@@ -405,7 +405,7 @@ public class game{
 	}
 	
 	public static void loadCards(Console con){
-		String folderPath = "/Users/chrislau/Documents/CS/CPT/cards";
+		String folderPath = "/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/cards";
 		String filePath;
 		//for loop to load cards
 		for(int i = 0; i < 52; i++){
@@ -421,7 +421,7 @@ public class game{
 		//draw background image
 		con.clear();
 		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/pokertable.jpeg"
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/pokertable.jpeg"
 		);
 		con.drawImage(imgBackground,0,0);
 		
@@ -452,7 +452,7 @@ public class game{
 		con.repaint();
 		
 		//draw image of card deck
-		BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/CS/CPT/backofcard.png");
+		BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
 		con.drawImage(imgDeck, 170,600);
 		con.repaint();
 

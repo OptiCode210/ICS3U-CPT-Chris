@@ -9,6 +9,7 @@ public class game{
 	//global variables
 	public static String strPlayerName = "";
 	public static BufferedImage[] imgCards = new BufferedImage[52];
+	public static BufferedImage imgDeck;
 	//create decks
 	public static int[][] intDeck = new int[52][3];
 	public static int[][] intShuffled = new int[52][3];	
@@ -48,6 +49,70 @@ public class game{
 		loadCards(con);
 		menu3Buttons(con);
 		//wordInput(con);
+	}
+	
+	public static void helpMenu(Console con){
+		BufferedImage imgBackground = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/helpBGfinal.jpeg"
+		);
+		con.drawImage(imgBackground,0,0);
+		con.repaint();
+		
+		//title
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 40));
+		con.drawString("How to play this game", 450, 70);
+		
+		//array for instructions
+		String [] arrGameplay ={
+			    "- Place your bet using the on-screen",
+				"  controls before each deal begins.",
+				"- Click \"Hit\" to draw a new card or",
+				"  \"Stand\" to end your turn safely.",
+				"- If your cards total over 21, you",
+				"  bust and lose your wager immediately.",
+				"- After you stand, dealer reveals",
+				"  cards and draws until 17 or higher.",
+				"- Aces count as 1 or 11, whichever."
+		};
+		
+		int intY = 150;
+		for(int i = 0; i< arrGameplay.length; i++){
+			con.setDrawColor(Color.WHITE);
+			con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+			con.drawString(arrGameplay[i], 450, intY);
+			intY += 60;
+		
+		}
+		
+		con.setDrawColor(new Color(212, 175, 55));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 20));
+		con.drawString("For more help email:", 450, 700);
+		con.drawString("210chrislau@gmail.com", 450, 730);
+		
+		con.repaint();
+		
+		//create back button
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.WHITE);
+		con.drawString("e - Back", 855, 725);
+		con.repaint();
+		
+		while(true){
+			char chrInput = con.getChar();  //captures typed character
+			
+			//directs input to corresponding methods
+			if(chrInput == 'e'){
+				game(con);
+				break;
+			}
+			
+			//pause program for a bit between loop
+			con.sleep(50);
+		}
 	}
 	
 	public static void logo(Console con) {
@@ -113,6 +178,13 @@ public class game{
 		con.setDrawColor(Color.WHITE);
 		con.drawString("   Quit", 435, 550);
 		
+		//make secret button image
+		con.setDrawColor(new Color(220, 126, 235)); // Red
+		con.fillRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.WHITE);
+		con.drawRoundRect(345, 650, intWidth, intHeight, 50, 50);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("   Help", 435, 650);
 		con.repaint();
 		
 		while (con.currentMouseButton() == 0) {
@@ -120,9 +192,7 @@ public class game{
 			}
 		
 		while(true){
-			
 			con.repaint();
-			
 			if(isClicked(con, 345, 350, intWidth, intHeight)){
 				startGame(con);
 				break;
@@ -132,9 +202,14 @@ public class game{
 			} else if(isClicked(con, 345, 550, intWidth, intHeight)){
 				quitGame(con);
 				break;
+			} else if(isClicked(con, 345, 650, intWidth, intHeight)){
+				helpMenu(con);
+				break;
 			}
-			con.sleep(2);
+			con.sleep(20);
 		}
+		
+		
 		
 	}
 	
@@ -189,6 +264,29 @@ public class game{
 		con.setDrawColor(Color.WHITE);
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
 		con.drawString("WELCOME TO BLACKJACK", 80, 70);
+	
+		//create back button
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(820, 720, 150, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.setDrawColor(Color.WHITE);
+		con.drawString("e - Back", 855, 725);
+		con.repaint();
+		
+		while(true){
+			char chrInput = con.getChar();  //captures typed character
+			
+			//directs input to corresponding methods
+			if(chrInput == 'e'){
+				game(con);
+				break;
+			}
+			
+			//pause program for a bit between loop
+			con.sleep(50);
+		}
 	
 		//Make the input area in the created box
 		for (int i = 0; i < 16; i++) {
@@ -371,6 +469,7 @@ public class game{
 		}
 		*/
 		
+		
 		//fill shuffled deck values
 		for(int i = 0; i < 52; i ++){
 			intShuffled[i][0] = intDeck[i][0];
@@ -451,68 +550,92 @@ public class game{
 		con.drawString("Your Hand", 650, 220);
 		con.repaint();
 		
+		/*
 		//draw image of card deck
-		BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
+		imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
 		con.drawImage(imgDeck, 170,600);
 		con.repaint();
+		*/
 
 		// Bet 10% button
 		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(600, 620, 150, 50, 20, 20);
+		con.fillRoundRect(100, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 10%", 620, 620);
+		con.drawString("  Bet 10%", 100, 690);
 		con.repaint();
 
 		// Bet 30% button
 		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(600, 690, 150, 50, 20, 20);
+		con.fillRoundRect(300, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 30%", 620, 690);
+		con.drawString("  Bet 30%", 300, 690);
 		con.repaint();
 
 		//Bet 50%
 		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(780, 620, 150, 50, 20, 20);
+		con.fillRoundRect(500, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 50%", 790, 620);
+		con.drawString("  Bet 50%", 500, 690);
 		con.repaint();
 		
 		//Bet 80%
 		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(780, 690, 150, 50, 20, 20);
+		con.fillRoundRect(700, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 80%", 790, 690);
+		con.drawString("  Bet 80%", 700, 690);
 		con.repaint();
 	}
 	
 	public static void bjBetRedInterface(Console con){
 		// Bet 10% button
 		con.setDrawColor(Color.RED);
-		con.fillRoundRect(600, 620, 150, 50, 20, 20);
+		con.fillRoundRect(100, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 10%", 620, 620);
+		con.drawString("  Bet 10%", 100, 690);
 		con.repaint();
 
 		// Bet 30% button
 		con.setDrawColor(Color.RED);
-		con.fillRoundRect(600, 690, 150, 50, 20, 20);
+		con.fillRoundRect(300, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 30%", 620, 690);
+		con.drawString("  Bet 30%", 300, 690);
 		con.repaint();
 
 		//Bet 50%
 		con.setDrawColor(Color.RED);
-		con.fillRoundRect(780, 620, 150, 50, 20, 20);
+		con.fillRoundRect(500, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 50%", 790, 620);
+		con.drawString("  Bet 50%", 500, 690);
 		con.repaint();
 		
 		//Bet 80%
 		con.setDrawColor(Color.RED);
-		con.fillRoundRect(780, 690, 150, 50, 20, 20);
+		con.fillRoundRect(700, 690, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.drawString("Bet 80%", 790, 690);
+		con.drawString("  Bet 80%", 700, 690);
 		con.repaint();
+	}
+	
+	public static void animateCard(Console con, BufferedImage imgDeck, BufferedImage imgFace, int endX, int endY){
+		int intStartX = 170;
+		int intStartY = 600;
+		
+		int intFrames = 20;  //number of frames in the animation
+		
+		for(int i = 0; i <= intFrames; i++){
+			int x = intStartX + (endX - intStartX) * i / intFrames;
+			int y = intStartY + (endY - intStartY) * i / intFrames;
+			
+			//redraw UI
+			con.clear();
+			bjBetRedInterface(con);
+			
+			con.drawImage(imgDeck, x, y);
+			con.repaint();
+			con.sleep(30);
+		}
+		
+		con.drawImage(imgFace, endX, endY);
 	}
 	
 	public static void blackjack(Console con){
@@ -548,17 +671,20 @@ public class game{
 			int intBet = 0;
 			
 			//record bet
+			con.drawString("Place initial bets: ", 100, 620);
+			con.repaint();
+			
 			while(intBet == 0){
-				if(isClicked(con, 600, 620, 150, 50)){ //10%
+				if(isClicked(con, 100, 690, 150, 50)){ //10%
 					intBet = Math.max(1, (int)(intGameBalance * 0.10));
 					System.out.println("10% button clicked: " + intBet);
-				}else if(isClicked(con, 600, 690, 150, 50)){  //30%
+				}else if(isClicked(con, 300, 690, 150, 50)){  //30%
 					intBet = Math.max(1, (int)(intGameBalance * 0.30));
 					System.out.println("30% button clicked: " + intBet);
-				}else if (isClicked(con, 780, 620, 150, 50)) { //50%
+				}else if (isClicked(con, 500, 690, 150, 50)) { //50%
 					intBet = Math.max(1, (int)(intGameBalance * 0.50));
 					System.out.println("50% button clicked: " + intBet);
-				}else if (isClicked(con, 780, 690, 150, 50)) {  //80%
+				}else if (isClicked(con, 700, 690, 150, 50)) {  //80%
 					intBet = Math.max(1, (int)(intGameBalance * 0.80));
 					System.out.println("80% button clicked: " + intBet);
 				}
@@ -574,9 +700,27 @@ public class game{
 		    con.repaint();
 			bjBetRedInterface(con); //buttons become red after you click it
 			
+			//deal cards
+			BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
+			loadCards(con);
+			for(int i = 0; i < 2; i++){
+				//deal player cards
+				arrPlayer[intPCardCount][0] = intShuffled[intCIndex][0];
+				arrPlayer[intPCardCount][1] = intShuffled[intCIndex][1];
+				intPCardCount++;
+				intCIndex++;
+				
+				//deal dealer cards
+				arrDealer[intDCardCount][0] = intShuffled[intCIndex][0];
+				arrDealer[intDCardCount][1] = intShuffled[intCIndex][1];
+				intDCardCount++;
+				intCIndex++;
+			}
+			
 			break;
 			
 		}
 	}
+	
 	
 }

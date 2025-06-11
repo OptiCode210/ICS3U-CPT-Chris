@@ -92,7 +92,7 @@ public class game{
 		//First button: Play Game (1)
 		con.setDrawColor(new Color(32,145,94));	//Dark Green
 		con.fillRoundRect(345,350, intWidth, intHeight ,50,50);
-		con.setDrawColor(Color.BLACK);
+		con.setDrawColor(Color.WHITE);
 		con.drawRoundRect(345, 350, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
 		con.drawString("   Play Game", 390, 350);
@@ -100,7 +100,7 @@ public class game{
 		//Second Button: View Leaderboard (2)
 		con.setDrawColor(new Color(31, 46, 130)); // Blue
 		con.fillRoundRect(345, 450, intWidth, intHeight, 50, 50);
-		con.setDrawColor(Color.BLACK);
+		con.setDrawColor(Color.WHITE);
 		con.drawRoundRect(345, 450, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
 		con.drawString("   Leaderboard", 370, 450);
@@ -108,7 +108,7 @@ public class game{
 		//Third Button: Quit (3) 
 		con.setDrawColor(new Color(150, 20, 30)); // Red
 		con.fillRoundRect(345, 550, intWidth, intHeight, 50, 50);
-		con.setDrawColor(Color.BLACK);
+		con.setDrawColor(Color.WHITE);
 		con.drawRoundRect(345, 550, intWidth, intHeight, 50, 50);
 		con.setDrawColor(Color.WHITE);
 		con.drawString("   Quit", 435, 550);
@@ -246,7 +246,7 @@ public class game{
 		con.setDrawColor(new Color(227, 208, 64));
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
 		con.drawString("Name", 275, 45);
-		con.drawString("Money", 615, 45);
+		con.drawString("Amount", 615, 45);
 		
 		//load the leaderboard file
 		TextInputFile txtLB = new TextInputFile("leaderboard.txt");
@@ -570,7 +570,7 @@ public class game{
 			bjBetInterface(con);
 			con.setDrawColor(Color.WHITE);
 			con.drawString(""+ intGameBalance, 270, 100);
-			con.drawString("" + intBet, 200, 150);
+			con.drawString("" + intBet, 205, 150);
 		    con.repaint();
 			bjBetRedInterface(con); //buttons become red after you click it
 			

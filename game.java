@@ -339,38 +339,6 @@ public class game{
 		}
 	}
 	
-	public static void blackjack(Console con){
-	
-		//draw background image
-		con.clear();
-		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/CS/CPT/pokertable.jpeg"
-		);
-		con.drawImage(imgBackground,0,0);
-		
-		con.setDrawColor(new Color(255,215,0));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString(" WELCOME", 410, 40);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Your Amount: ", 70, 100);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Dealer's Hand", 120, 200);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Your Hand", 650, 200);
-		con.repaint();
-		
-		blackjackLogic(con);
-	}
-	
 	public static void deckArray(Console con){
 		
 		//fill deck values
@@ -449,7 +417,40 @@ public class game{
 		//con.drawImage(imgCards[22],100,100);
 	}
 	
-	public static void bjInterface(Console con){
+	public static void bjBetInterface(Console con){
+		//draw background image
+		con.clear();
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/CS/CPT/pokertable.jpeg"
+		);
+		con.drawImage(imgBackground,0,0);
+		
+		//draw strings
+		con.setDrawColor(new Color(255,215,0));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString(" WELCOME", 410, 40);
+		con.repaint();
+		
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Your Amount: ", 70, 100);
+		con.repaint();
+		
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Your Bet: ",70, 150);
+		con.repaint();
+		
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Dealer's Hand", 120, 220);
+		con.repaint();
+		
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Your Hand", 650, 220);
+		con.repaint();
+		
 		//draw image of card deck
 		BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/CS/CPT/backofcard.png");
 		con.drawImage(imgDeck, 170,600);
@@ -469,16 +470,52 @@ public class game{
 		con.drawString("Bet 30%", 620, 690);
 		con.repaint();
 
-		//Custom amount
+		//Bet 50%
 		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(780, 620, 150, 120, 20, 20);
+		con.fillRoundRect(780, 620, 150, 50, 20, 20);
 		con.setDrawColor(Color.BLACK);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 27));
-		con.drawString(" Custom Bet", 780, 620);
+		con.drawString("Bet 50%", 790, 620);
+		con.repaint();
+		
+		//Bet 80%
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(780, 690, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 80%", 790, 690);
 		con.repaint();
 	}
 	
-	public static void blackjackLogic(Console con){
+	public static void bjBetRedInterface(Console con){
+		// Bet 10% button
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(600, 620, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 10%", 620, 620);
+		con.repaint();
+
+		// Bet 30% button
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(600, 690, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 30%", 620, 690);
+		con.repaint();
+
+		//Bet 50%
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(780, 620, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 50%", 790, 620);
+		con.repaint();
+		
+		//Bet 80%
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(780, 690, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 80%", 790, 690);
+		con.repaint();
+	}
+	
+	public static void blackjack(Console con){
 		//create array for both the player and the dealer's hand
 		int[][] arrPlayer = new int[5][3];
 		int[][] arrDealer = new int[5][3];
@@ -490,7 +527,16 @@ public class game{
 		//set boolean value to see if player wants to play again
 		boolean booQuit = false;
 		
-		while(booQuit == false && intGameBalance > 0){
+		//load bet interface
+		bjBetInterface(con);
+		
+		//booQuit == false && intGameBalance > 0
+		while(true){ //change it when real game
+			//print amount
+			con.setDrawColor(Color.WHITE);
+			con.drawString(""+ intGameBalance, 270, 100);
+			con.repaint();
+			
 			con.clear();
 			con.sleep(30); //free up system resources
 			deckArray(con);
@@ -501,22 +547,35 @@ public class game{
 			int intDCardCount = 0; //dealer card count
 			int intBet = 0;
 			
-			//make general interface
-			bjInterface(con);
-			
-			while(true){
-				if(isClicked(con, 600, 620, 150, 50)){
+			//record bet
+			while(intBet == 0){
+				if(isClicked(con, 600, 620, 150, 50)){ //10%
 					intBet = Math.max(1, (int)(intGameBalance * 0.10));
-					System.out.println(intBet);
-					break;
-				}else if(isClicked(con, 600, 690, 150, 50)){
+					System.out.println("10% button clicked: " + intBet);
+				}else if(isClicked(con, 600, 690, 150, 50)){  //30%
 					intBet = Math.max(1, (int)(intGameBalance * 0.30));
-					System.out.println(intBet);
-					break;
-				}else if(isClicked(con, 780, 620, 150, 120)){
-					
+					System.out.println("30% button clicked: " + intBet);
+				}else if (isClicked(con, 780, 620, 150, 50)) { //50%
+					intBet = Math.max(1, (int)(intGameBalance * 0.50));
+					System.out.println("50% button clicked: " + intBet);
+				}else if (isClicked(con, 780, 690, 150, 50)) {  //80%
+					intBet = Math.max(1, (int)(intGameBalance * 0.80));
+					System.out.println("80% button clicked: " + intBet);
 				}
+				con.sleep(20);
 			}
+			
+			//print amounts
+			intGameBalance -= intBet; //deduct bet from amount
+			bjBetInterface(con);
+			con.setDrawColor(Color.WHITE);
+			con.drawString(""+ intGameBalance, 270, 100);
+			con.drawString("" + intBet, 200, 150);
+		    con.repaint();
+			bjBetRedInterface(con); //buttons become red after you click it
+			
+			
+			
 		}
 	}
 	

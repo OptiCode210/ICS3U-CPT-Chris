@@ -9,6 +9,10 @@ public class game{
 	//global variables
 	public static String strPlayerName = "";
 	public static BufferedImage[] imgCards = new BufferedImage[52];
+	//create decks
+	public static int[][] intDeck = new int[52][3];
+	public static int[][] intShuffled = new int[52][3];	
+	
 	
 	//main program:
 	public static void main(String args[]){
@@ -21,19 +25,19 @@ public class game{
 	
 	//mouse click program
 	public static boolean isClicked(Console con, int x, int y, int w, int h){
-		if (con.currentMouseButton() != 0){
-			con.sleep(2);
+		 if (con.currentMouseButton() == 1) {
+			int mx = con.currentMouseX();
+			int my = con.currentMouseY();
+			// check bounds
+			if (mx >= x && mx < x + w && my >= y && my < y + h) {
+				// debounce: wait until they lift the button
+				while (con.currentMouseButton() == 1) {
+					con.sleep(10);
+				}
+				return true;
+			}
 		}
-		
-		//capture press coordinates
-		int XCor = con.currentMouseX();
-		int YCor = con.currentMouseY();
-		
-		if (con.currentMouseButton() != 0){
-			con.sleep(2);
-		}
-		
-		return (XCor >= x && XCor < x + w && YCor >= y && YCor < y + h);
+		return false;
 	}
 	
 
@@ -346,85 +350,28 @@ public class game{
 		
 		con.setDrawColor(new Color(255,215,0));
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("  WELCOME", 400, 40);
+		con.drawString(" WELCOME", 410, 40);
 		con.repaint();
 		
-		deckArray(con);
-		
-		//create bet 10% button
-		con.setDrawColor(Color.WHITE);
-		con.fillRoundRect(80, 630, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(80, 630, 150, 50, 20, 20);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 10%", 100, 630);
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Your Amount: ", 70, 100);
 		con.repaint();
 		
-		//30%
-		con.setDrawColor(Color.WHITE);
-		con.fillRoundRect(280, 630, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(280, 630, 150, 50, 20, 20);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 30%", 300, 630);
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Dealer's Hand", 120, 200);
 		con.repaint();
 		
-		//Hit
-		con.setDrawColor(Color.WHITE);
-		con.fillRoundRect(780, 600, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(780, 600, 150, 50, 20, 20);       
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
-		con.setDrawColor(Color.BLACK);
-		con.drawString("   Hit", 820, 600);
+		con.setDrawColor(new Color(255,255,255));
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("Your Hand", 650, 200);
 		con.repaint();
-	
-		//Stand
-		con.setDrawColor(Color.WHITE);
-		con.fillRoundRect(780, 680, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(780, 680, 150, 50, 20, 20);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
-		con.setDrawColor(Color.BLACK);
-		con.drawString("Stand", 825, 680);
-		con.repaint();
-		//input box
-		con.setDrawColor(Color.GRAY);
-		con.fillRoundRect(490, 600, 210, 130, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(490, 600, 210, 130, 20, 20);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 23));
-		con.setDrawColor(Color.BLACK);
-		con.drawString("Custom% (1-100):", 500, 605);
-		con.repaint();
-		
-		//create padding
-		for(int i = 0; i < 27; i++){
-			con.println();
-		}
-		con.print("                                               ");
-		
-		int intCustP;
-		while(true){
-			intCustP = con.readInt();
-			
-			if(intCustP >= 0 && intCustP <= 100){
-				break;
-			}
-			con.println("                                           Invalid input");
-			con.sleep(500);
-			con.clear();	
-		}
 		
 		blackjackLogic(con);
 	}
 	
 	public static void deckArray(Console con){
-		
-		//create arrays for card values
-		int[][] intDeck = new int[52][3];
 		
 		//fill deck values
 		int intIndex = 0;
@@ -442,7 +389,6 @@ public class game{
 			}
 		}
 		
-		
 		/*
 		//array test
 		for(int intI = 0; intI < 52; intI++){
@@ -457,9 +403,7 @@ public class game{
 		}
 		*/
 		
-		
-		//create new array to store shuffled deck
-		int[][] intShuffled = new int[52][3];
+		//fill shuffled deck values
 		for(int i = 0; i < 52; i ++){
 			intShuffled[i][0] = intDeck[i][0];
 			intShuffled[i][1] = intDeck[i][1];
@@ -478,7 +422,6 @@ public class game{
 			}
 		}
 		
-		
 		/*
 		//test if the array is sorted
 		System.out.println();
@@ -490,6 +433,7 @@ public class game{
 			System.out.println("Value: " + val + " Suit: " + suit + " Order: " + order);
 		}
 		*/
+		
 	}
 	
 	public static void loadCards(Console con){
@@ -505,8 +449,75 @@ public class game{
 		//con.drawImage(imgCards[22],100,100);
 	}
 	
+	public static void bjInterface(Console con){
+		//draw image of card deck
+		BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/CS/CPT/backofcard.png");
+		con.drawImage(imgDeck, 170,600);
+		con.repaint();
+
+		// Bet 10% button
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(600, 620, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 10%", 620, 620);
+		con.repaint();
+
+		// Bet 30% button
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(600, 690, 150, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawString("Bet 30%", 620, 690);
+		con.repaint();
+
+		//Custom amount
+		con.setDrawColor(new Color(71,237,129));
+		con.fillRoundRect(780, 620, 150, 120, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 27));
+		con.drawString(" Custom Bet", 780, 620);
+		con.repaint();
+	}
+	
 	public static void blackjackLogic(Console con){
+		//create array for both the player and the dealer's hand
+		int[][] arrPlayer = new int[5][3];
+		int[][] arrDealer = new int[5][3];
 		
+		//set balance
+		int intStartBalance = 5000;
+		int intGameBalance = intStartBalance;
+	
+		//set boolean value to see if player wants to play again
+		boolean booQuit = false;
+		
+		while(booQuit == false && intGameBalance > 0){
+			con.clear();
+			con.sleep(30); //free up system resources
+			deckArray(con);
+			
+			//reset deal counts
+			int intCIndex = 0;
+			int intPCardCount = 0; //player card count
+			int intDCardCount = 0; //dealer card count
+			int intBet = 0;
+			
+			//make general interface
+			bjInterface(con);
+			
+			while(true){
+				if(isClicked(con, 600, 620, 150, 50)){
+					intBet = Math.max(1, (int)(intGameBalance * 0.10));
+					System.out.println(intBet);
+					break;
+				}else if(isClicked(con, 600, 690, 150, 50)){
+					intBet = Math.max(1, (int)(intGameBalance * 0.30));
+					System.out.println(intBet);
+					break;
+				}else if(isClicked(con, 780, 620, 150, 120)){
+					
+				}
+			}
+		}
 	}
 	
 }

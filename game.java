@@ -264,30 +264,7 @@ public class game{
 		con.setDrawColor(Color.WHITE);
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
 		con.drawString("WELCOME TO BLACKJACK", 80, 70);
-	
-		//create back button
-		con.setDrawColor(Color.RED);
-		con.fillRoundRect(820, 720, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawRoundRect(820, 720, 150, 50, 20, 20);
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
-		con.setDrawColor(Color.WHITE);
-		con.drawString("e - Back", 855, 725);
-		con.repaint();
 		
-		while(true){
-			char chrInput = con.getChar();  //captures typed character
-			
-			//directs input to corresponding methods
-			if(chrInput == 'e'){
-				game(con);
-				break;
-			}
-			
-			//pause program for a bit between loop
-			con.sleep(50);
-		}
-	
 		//Make the input area in the created box
 		for (int i = 0; i < 16; i++) {
 			con.println();
@@ -296,6 +273,7 @@ public class game{
 		con.print(strPadding);
 		String strPlayerName = con.readLine();
 		con.repaint();
+		
 		
 		System.out.println("name: " + strPlayerName);
 		
@@ -715,6 +693,17 @@ public class game{
 				arrDealer[intDCardCount][1] = intShuffled[intCIndex][1];
 				intDCardCount++;
 				intCIndex++;
+			}
+			
+			//make the dealed cards visible
+			int intX = 200;
+			for(int j = 0; j < intPCardCount; j++){
+				int value = arrPlayer[j][0];
+				int suit = arrPlayer[j][1];
+				
+				//create index for the card
+				int index = (suit -1)*13 +(value -1);
+				con.drawImage(imgCards[index], intX, 400);
 			}
 			
 			break;

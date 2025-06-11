@@ -428,7 +428,7 @@ public class game{
 		//draw strings
 		con.setDrawColor(new Color(255,215,0));
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString(" WELCOME", 410, 40);
+		con.drawString("BLACKJACK", 410, 40);
 		con.repaint();
 		
 		con.setDrawColor(new Color(255,255,255));
@@ -574,7 +574,7 @@ public class game{
 		    con.repaint();
 			bjBetRedInterface(con); //buttons become red after you click it
 			
-			
+			break;
 			
 		}
 	}

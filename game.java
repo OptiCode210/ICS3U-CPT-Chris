@@ -13,14 +13,16 @@ public class game{
 	//create decks
 	public static int[][] intDeck = new int[52][3];
 	public static int[][] intShuffled = new int[52][3];	
-	
-	//main program:
-	public static void main(String args[]){
+	//hands
+	public static int[][] intPlayer = new int[5][2];
+	public static int[][] intDealer = new int[5][2];
+
+	public static void main(String args[]){		//main program:
 		Console con = new Console(1000,800);
 		
 		//calls the main menu method
-		game.game(con);
-		
+		//game.game(con);
+		blackjack(con);
 	}
 	
 	//mouse click program
@@ -40,7 +42,6 @@ public class game{
 		return false;
 	}
 	
-	//secondary programs:
 	public static void game(Console con){
 		background(con);
 		logo(con);
@@ -472,106 +473,6 @@ public class game{
 	}
 
 	public static void bjBetInterface(Console con){
-		//draw background image
-		con.clear();
-		BufferedImage imgBackground = con.loadImage(
-			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/pokertable.jpeg"
-		);
-		con.drawImage(imgBackground,0,0);
-		
-		//draw strings
-		con.setDrawColor(new Color(255,215,0));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("BLACKJACK", 410, 40);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Your Amount: ", 70, 100);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Your Bet: ",70, 150);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Dealer's Hand", 120, 220);
-		con.repaint();
-		
-		con.setDrawColor(new Color(255,255,255));
-		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
-		con.drawString("Your Hand", 650, 220);
-		con.repaint();
-		
-		/*
-		//draw image of card deck
-		imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
-		con.drawImage(imgDeck, 170,600);
-		con.repaint();
-		*/
-
-		// Bet 10% button
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(100, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 10%", 100, 690);
-		con.repaint();
-
-		// Bet 30% button
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(300, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 30%", 300, 690);
-		con.repaint();
-
-		//Bet 50%
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(500, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 50%", 500, 690);
-		con.repaint();
-		
-		//Bet 80%
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(700, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 80%", 700, 690);
-		con.repaint();
-	}
-	
-	public static void bjBetRedInterface(Console con){
-		// Bet 10% button
-		con.setDrawColor(Color.RED);
-		con.fillRoundRect(100, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 10%", 100, 690);
-		con.repaint();
-
-		// Bet 30% button
-		con.setDrawColor(Color.RED);
-		con.fillRoundRect(300, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 30%", 300, 690);
-		con.repaint();
-
-		//Bet 50%
-		con.setDrawColor(Color.RED);
-		con.fillRoundRect(500, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 50%", 500, 690);
-		con.repaint();
-		
-		//Bet 80%
-		con.setDrawColor(Color.RED);
-		con.fillRoundRect(700, 690, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("  Bet 80%", 700, 690);
-		con.repaint();
-	}
-	
-	public static void blackjack(Console con){
 		//background
 			con.clear();
 			BufferedImage imgBackground = con.loadImage(
@@ -582,11 +483,153 @@ public class game{
 			
 		//wordings
 			con.setDrawColor(new Color(227, 208, 64));
-			con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
-			con.drawString("Amount: ", 275, 45);
-			con.drawString("Amount: ", 615, 45);
+			con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+			con.drawString("Amount: ", 50, 50);
+			con.drawString("Bet: ", 50, 100);
+			con.drawString("Dealer's hand: ", 200, 170);
+			con.drawString("Player's hand: ", 200, 420);
 		
+		//buttons
+			String[] arrButtonName = {
+			"    Hit", "    Stand","Double Down", "Bet 10%", "Bet 30%", "Bet 60%", "  All In"
+			};
+			int intX = 650;    // x-position of all buttons
+			int intY = 100;    // starting y-position
+			int intW = 200;    // button width
+			int intH = 50;     // button height
+			int intArc = 20;     // corner radius
+			int intSpace = 100;     // vertical gap between buttons
+			
+			Color colButtonGreen = new Color(71, 237, 129);
+			
+			con.setDrawColor(colButtonGreen);
+			for (int intI = 0; intI < arrButtonName.length; intI++) {
+				int y = intY + intI * intSpace;
+				con.fillRoundRect(intX, y, intW, intH, intArc, intArc);
+			}
+
+			con.setDrawColor(Color.BLACK);
+			for (int intI = 0; intI < arrButtonName.length; intI++) {
+				int y = intY + intI * intSpace;
+				// center text at about half the button height (50/2 = 25), tweak +5 for baseline  
+				int yText = y + 5;
+				con.drawString(arrButtonName[intI], intX + 10, yText);
+			}
+
+			con.repaint();
+	}
+	
+	public static void blackjack(Console con){		//main method
+		loadCards(con);
+		deckArray(con);
+		dealInitialCards(intShuffled, intPlayer, intDealer);
+		
+		int intPlayerTotal = calculateHandValue(intPlayer);
+		int intDealerTotal = calculateHandValue(intDealer);
+		
+		int intDeckIndex = 4;
+		
+		intDeckIndex = dealerPlay(intShuffled, intDealer, intDeckIndex);
+		
+		 System.out.println("DEALER FINAL HAND:");
+		for (int i = 0; i < intDealer.length; i++) {
+			if (intDealer[i][0] != 0) {
+				System.out.println("Card " + (i + 1) + ": Value = " + intDealer[i][0] + ", Suit = " + intDealer[i][1]);
+			}
+		}
+		
+		intDealerTotal = calculateHandValue(intDealer);
+		System.out.println("Final Dealer Total: " + intDealerTotal);
 	}// blackjack method
 	
+	public static void dealInitialCards(int[][] intShuffled, int[][] intPlayer, int[][] intDealer) {
+		//use method 
+			//dealInitialCards(intShuffled, intPlayer, intDealer);
+		// Player cards
+		intPlayer[0][0] = intShuffled[0][0];
+		intPlayer[0][1] = intShuffled[0][1];
+
+		intPlayer[1][0] = intShuffled[2][0];
+		intPlayer[1][1] = intShuffled[2][1];
+
+		// Dealer cards
+		intDealer[0][0] = intShuffled[1][0];
+		intDealer[0][1] = intShuffled[1][1];
+
+		intDealer[1][0] = intShuffled[3][0];
+		intDealer[1][1] = intShuffled[3][1];
+
+		// Debug prints
+		System.out.println("PLAYER CARDS:");
+		for (int i = 0; i < 2; i++) {
+			System.out.println("Card " + (i+1) + ": Value = " + intPlayer[i][0] + ", Suit = " + intPlayer[i][1]);
+		}
+
+		System.out.println("DEALER CARDS:");
+		for (int i = 0; i < 2; i++) {
+			System.out.println("Card " + (i+1) + ": Value = " + intDealer[i][0] + ", Suit = " + intDealer[i][1]);
+		}
+	}
+
+	public static int calculateHandValue(int[][] hand ){	
+		//call
+			//int intPlayerTotal = calculateHandValue(intPlayer);
+			//int intDealerTotal = calculateHandValue(intDealer);
+			
+		int intTotal = 0;
+		int intAces = 0; //aces special rule
+		
+		for (int i = 0; i < hand.length; i++) {		//loop through all cards
+			int intVal = hand[i][0]; 	//first column of table is the value
+			
+			if(intVal == 0){	//empty slot when value is 0
+				break;
+			}
+			if(intVal > 10){	//JQK worth 10
+				intVal = 10;
+			}
+			if(intVal == 1){	//aces are treated as 11s for now and are tracked
+				intVal = 11;
+				intAces ++;
+			}
+		
+			intTotal += intVal;
+		}
+		
+		//if total is over 21 + hv aces -> downgrade from 11 to 1
+		while(intTotal > 21 && intAces > 0){	
+			intTotal -= 10;
+			intAces --;
+		}
+		
+		return intTotal;
+	}
 	
-}
+	public static int dealerPlay(int[][] intShuffled, int[][] intDealer, int intDeckIndex){		//keep hitting until 17
+		
+		while(calculateHandValue(intDealer) < 17){	
+			boolean drewCard = false;
+			for(int i =0; i < intDealer.length; i++){
+				if(intDealer[i][0] == 0){ //find first empty card slot
+					intDealer[i][0] = intShuffled[intDeckIndex][0];
+					intDealer[i][1] = intShuffled[intDeckIndex][1];
+					intDeckIndex++;
+					drewCard = true;
+					break;
+				}
+			}
+			if (!drewCard) {
+				System.out.println("Dealer has 5 cards already — cannot hit.");
+				break; // avoid infinite loop
+			}
+		}
+		return intDeckIndex;
+		
+	}
+	
+
+}//class
+	
+
+	
+

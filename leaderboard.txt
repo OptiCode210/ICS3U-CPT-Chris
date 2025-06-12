@@ -1,4 +1,5 @@
-
-Chris - 4500
-Chris - 4500
-as - 5000
+Chris1 - 4500
+Chris2 - 4500
+Chris3 - 5000
+Yoda - 29792
+Anakin - 1000000

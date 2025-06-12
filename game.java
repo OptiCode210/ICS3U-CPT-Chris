@@ -14,7 +14,6 @@ public class game{
 	public static int[][] intDeck = new int[52][3];
 	public static int[][] intShuffled = new int[52][3];	
 	
-	
 	//main program:
 	public static void main(String args[]){
 		Console con = new Console(1000,800);
@@ -41,7 +40,6 @@ public class game{
 		return false;
 	}
 	
-
 	//secondary programs:
 	public static void game(Console con){
 		background(con);
@@ -212,28 +210,7 @@ public class game{
 		
 		
 	}
-	
-	public static void wordInput(Console con){
-		while(true){
-			char chrInput = con.getChar();  //captures typed character
-			
-			//directs input to corresponding methods
-			if(chrInput == '1'){
-				startGame(con);
-				break;
-			}else if(chrInput == '2'){
-				showLeaderboard(con);
-				break;
-			}else if(chrInput == '3'){
-				quitGame(con);
-				break;
-			}
-			
-			//pause program for a bit between loop
-			con.sleep(50);
-		}
-	}
-	
+
 	public static void startGame(Console con){
 		//clear the screen of any text
 		con.clear();
@@ -493,7 +470,7 @@ public class game{
 		//try out printing cards
 		//con.drawImage(imgCards[50],100,100);
 	}
-	
+
 	public static void bjBetInterface(Console con){
 		//draw background image
 		con.clear();
@@ -594,164 +571,22 @@ public class game{
 		con.repaint();
 	}
 	
-	public static void animateCard(Console con, BufferedImage imgDeck, BufferedImage imgFace, int endX, int endY){
-		int intStartX = 170;
-		int intStartY = 600;
-		
-		int intFrames = 20;  //number of frames in the animation
-		
-		for(int i = 0; i <= intFrames; i++){
-			int x = intStartX + (endX - intStartX) * i / intFrames;
-			int y = intStartY + (endY - intStartY) * i / intFrames;
-			
-			//redraw UI
-			con.clear();
-			bjBetRedInterface(con);
-			
-			con.drawImage(imgDeck, x, y);
-			con.repaint();
-			con.sleep(30);
-		}
-		
-		con.drawImage(imgFace, endX, endY);
-	}
-	
 	public static void blackjack(Console con){
-		//create array for both the player and the dealer's hand
-		int[][] arrPlayer = new int[5][3];
-		int[][] arrDealer = new int[5][3];
-		
-		//set balance
-		int intStartBalance = 5000;
-		int intGameBalance = intStartBalance;
-	
-		//set boolean value to see if player wants to play again
-		boolean booQuit = false;
-		
-		//load bet interface
-		bjBetInterface(con);
-		
-		//booQuit == false && intGameBalance > 0
-		while(true){ //change it when real game
-			//print amount
-			con.setDrawColor(Color.WHITE);
-			con.drawString(""+ intGameBalance, 270, 100);
-			con.repaint();
-			
+		//background
 			con.clear();
-			con.sleep(30); //free up system resources
-			deckArray(con);
-			
-			//reset deal counts
-			int intCIndex = 0;
-			int intPCardCount = 0; //player card count
-			int intDCardCount = 0; //dealer card count
-			int intBet = 0;
-			
-			//record bet
-			con.drawString("Place initial bets: ", 100, 620);
+			BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/pokertable.jpeg"
+			);
+			con.drawImage(imgBackground,0,0);
 			con.repaint();
 			
-			while(intBet == 0){
-				if(isClicked(con, 100, 690, 150, 50)){ //10%
-					intBet = Math.max(1, (int)(intGameBalance * 0.10));
-					System.out.println("10% button clicked: " + intBet);
-				}else if(isClicked(con, 300, 690, 150, 50)){  //30%
-					intBet = Math.max(1, (int)(intGameBalance * 0.30));
-					System.out.println("30% button clicked: " + intBet);
-				}else if (isClicked(con, 500, 690, 150, 50)) { //50%
-					intBet = Math.max(1, (int)(intGameBalance * 0.50));
-					System.out.println("50% button clicked: " + intBet);
-				}else if (isClicked(con, 700, 690, 150, 50)) {  //80%
-					intBet = Math.max(1, (int)(intGameBalance * 0.80));
-					System.out.println("80% button clicked: " + intBet);
-				}
-				con.sleep(20);
-			}
-			
-			//print amounts
-			intGameBalance -= intBet; //deduct bet from amount
-			bjBetInterface(con);
-			con.setDrawColor(Color.WHITE);
-			con.drawString(""+ intGameBalance, 270, 100);
-			con.drawString("" + intBet, 205, 150);
-		    con.repaint();
-			bjBetRedInterface(con); //buttons become red after you click it
-			
-			con.sleep(1000);
-			
-			//deal cards
-			BufferedImage imgDeck = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
-			loadCards(con);
-			for(int i = 0; i < 2; i++){
-				//deal player cards
-				arrPlayer[intPCardCount][0] = intShuffled[intCIndex][0];
-				arrPlayer[intPCardCount][1] = intShuffled[intCIndex][1];
-				intPCardCount++;
-				intCIndex++;
-				
-				//deal dealer cards
-				arrDealer[intDCardCount][0] = intShuffled[intCIndex][0];
-				arrDealer[intDCardCount][1] = intShuffled[intCIndex][1];
-				intDCardCount++;
-				intCIndex++;
-			}
-			
-			//make the dealed cards visible
-			
-			//dealer
-			int intDX = 100, intDY = 350;
-			for (int j = 0; j < intDCardCount; j++) {
-				if (j == 1) {
-					// covered card
-					con.drawImage(imgDeck, intDX, intDY);
-				} else {
-					// face-up card
-					int value = arrDealer[j][0];
-					int suit  = arrDealer[j][1];
-					int index = (suit - 1) * 13 + (value - 1);
-					con.drawImage(imgCards[index], intDX, intDY);
-				}
-				intDX += 70;
-				intDY += 10;
-				con.repaint();
-				con.sleep(500);
-			}
-			
-			//player
-			int intPX = 570;
-			int intPY = 350;
-			for (int j = 0; j < intPCardCount; j++) {
-				int value = arrPlayer[j][0];
-				int suit  = arrPlayer[j][1];
-				int index = (suit - 1) * 13 + (value - 1);
-				con.drawImage(imgCards[index], intPX, intPY);
-				intPX += 70;
-				intPY += 10;
-				con.repaint();
-				con.sleep(500);
-			}
-			
-			hitStand(con);
-			
-			break;
-			
-		}
-	}
-	
-	public static void hitStand(Console con){
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(500, 620, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("       Hit   ", 500, 620);
-		con.repaint();
+		//wordings
+			con.setDrawColor(new Color(227, 208, 64));
+			con.setDrawFont(new Font("Times New Roman", Font.BOLD, 50));
+			con.drawString("Amount: ", 275, 45);
+			con.drawString("Amount: ", 615, 45);
 		
-		con.setDrawColor(new Color(71,237,129));
-		con.fillRoundRect(700, 620, 150, 50, 20, 20);
-		con.setDrawColor(Color.BLACK);
-		con.drawString("     Stand   ", 700, 620);
-		con.repaint();
-	}
+	}// blackjack method
 	
 	
 }

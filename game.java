@@ -10,6 +10,8 @@ public class game{
 	public static String strPlayerName = "";
 	public static BufferedImage[] imgCards = new BufferedImage[52];
 	public static BufferedImage imgDeck;
+	public static int intPlayerMoney = 5000;
+	public static int intBet = 0;
 	//create decks
 	public static int[][] intDeck = new int[52][3];
 	public static int[][] intShuffled = new int[52][3];	
@@ -487,7 +489,7 @@ public class game{
 			con.drawString("Amount: ", 50, 50);
 			con.drawString("Bet: ", 50, 100);
 			con.drawString("Dealer's hand: ", 200, 170);
-			con.drawString("Player's hand: ", 200, 420);
+			con.drawString("Player's hand: ", 200, 450);
 		
 		//buttons
 			String[] arrButtonName = {
@@ -519,13 +521,14 @@ public class game{
 			con.repaint();
 	}
 	
-	public static void blackjack(Console con) {
-		// Setup deck and hands
-		loadCards(con);
-		deckArray(con);
-		
-		int intPlayerMoney = 5000; // starting money
-
+	public static void bjRedButtons(Console con,String strbutton, int x, int y, int w, int h){
+		con.setDrawColor(Color.RED);
+		con.fillRoundRect(x, y, 200, 50, 20, 20);
+		con.setDrawColor(Color.BLACK);
+		con.drawRoundRect(x, y, 200, 50, 20, 20);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 24));
+		con.drawString(strbutton, x, y);
+		con.repaint();
 	}
 	
 	public static void dealInitialCards(int[][] intShuffled, int[][] intPlayer, int[][] intDealer) {
@@ -736,4 +739,123 @@ public class game{
 
 		return count;
 	}
+
+	public static void blackjack(Console con) {
+		// Setup deck and hands
+		loadCards(con);
+		deckArray(con);
+		
+		intPlayerMoney = 5000; // starting money
+		intBet = 0;
+		
+		bjBetInterface(con);
+		bets(con);
+		
+		dealInitialCards(intShuffled, intPlayer, intDealer);
+		drawInitialDeal(con, intPlayer, intDealer, imgCards);
+		if(checkInitialBJ(con)) return;
+	}
+	
+	public static void bets(Console con){
+		while(intBet == 0){
+			if(isClicked(con, 650, 400, 150, 50)){ //10%
+				intBet = Math.max(1, (int)(intPlayerMoney * 0.10));
+				System.out.println("10% button clicked: " + intBet);
+				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
+				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
+				bjRedButtons(con,"  Bet 60%" ,650,600,150,50);
+				bjRedButtons(con,"  All In" ,650,700,150,50);
+			}else if(isClicked(con, 650, 500, 150, 50)){  //30%
+				intBet = Math.max(1, (int)(intPlayerMoney * 0.30));
+				System.out.println("30% button clicked: " + intBet);
+				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
+				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
+				bjRedButtons(con,"  Bet 60%" ,650,600,150,50);
+				bjRedButtons(con,"  All In" ,650,700,150,50);
+			}else if (isClicked(con, 650, 600, 150, 50)) { //50%
+				intBet = Math.max(1, (int)(intPlayerMoney * 0.60));
+				System.out.println("60% button clicked: " + intBet);
+				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
+				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
+				bjRedButtons(con,"  Bet 60%" ,650,600,150,50);
+				bjRedButtons(con,"  All In" ,650,700,150,50);
+				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
+				bjRedButtons(con,"  Bet 60%" ,650,600,150,50);
+				bjRedButtons(con,"  All In" ,650,700,150,50);
+			}
+			
+			con.sleep(20);
+		}
+		
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.setDrawColor(Color.WHITE);
+		con.drawString(""+intBet, 120, 100);
+		con.drawString(""+intPlayerMoney, 190, 50);
+		con.repaint();
+	}
+		
+	public static void drawInitialDeal(Console con, int[][] intPlayer, int[][] intDealer, BufferedImage[] imgCards){
+		BufferedImage imgBack = con.loadImage("/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/backofcard.png");
+
+		con.clear();
+		
+		// Offset settings
+		int xOffset = -90; // shift left
+		int yOffset = 110;  // shift down
+
+		// Draw dealer 1st card (shifted)
+		int valD1 = intDealer[0][0];
+		int suitD1 = intDealer[0][1];
+		con.drawImage(imgCards[(suitD1 - 1) * 13 + (valD1 - 1)], 200 + xOffset, 150 + yOffset);
+
+		// Draw player 1st card (shifted)
+		int valP1 = intPlayer[0][0];
+		int suitP1 = intPlayer[0][1];
+		con.drawImage(imgCards[(suitP1 - 1) * 13 + (valP1 - 1)], 200 + xOffset, 400 + yOffset);
+
+		con.repaint();
+		con.sleep(500);
+
+		// Draw dealer 2nd card (shifted + diagonal drift)
+		con.drawImage(imgBack, 270 + xOffset + 10, 150 + yOffset + 10);
+
+		// Draw player 2nd card (shifted + diagonal drift)
+		int valP2 = intPlayer[1][0];
+		int suitP2 = intPlayer[1][1];
+		con.drawImage(imgCards[(suitP2 - 1) * 13 + (valP2 - 1)], 270 + xOffset + 10, 400 + yOffset + 10);
+
+		con.repaint();
+	}
+
+	public static boolean checkInitialBJ(Console con){
+		 boolean roundEnded = false;
+
+		if (isBlackjack(intPlayer)) {
+			intPlayerMoney += intBet * 2; // +2x profit
+			roundEnded = true;
+			endRoundGraphics(con);
+		} else if(isBlackjack(intDealer)){
+			int valD2 = intDealer[1][0];
+			int suitD2 = intDealer[1][1];
+			int cardIndex = (suitD2 - 1) * 13 + (valD2 - 1);
+			con.drawImage(imgCards[cardIndex], 270, 150);
+			con.repaint();
+			con.sleep(500);
+			
+			if (isBlackjack(intPlayer)) {
+				// Tie
+				intPlayerMoney += intBet; // return bet
+			} else {
+				//player loses everything
+			}
+			roundEnded = true;
+		}
+		
+		return roundEnded;
+	}
+
+	public static void endRoundGraphics(Console con){
+		con.println("graphics here");
+	}
+
 }//class

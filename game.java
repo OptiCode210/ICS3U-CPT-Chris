@@ -645,6 +645,43 @@ public class game{
 		return "Tie";
 	}
 	
+	public static int playerPlay(int[][] intShuffled, int[][] intPlayer, int intDeckIndex, String strAction){
+		//use
+			// When hit button is clicked:
+			//intDeckIndex = playerTurnLogic(intShuffled, intPlayer, intDeckIndex, "hit");
+
+			// When stand button is clicked:
+			//playerTurnLogic(intShuffled, intPlayer, intDeckIndex, "stand");
+
+	
+		int intPlayerCardIndex = 0;
+		
+		//find first empty card slot
+		 for (int i = 0; i < intPlayer.length; i++) {
+			if (intPlayer[i][0] == 0) {
+				intPlayerCardIndex = i;
+				break;
+			}
+		}
+		
+		//hit logic
+		if(strAction.equalsIgnoreCase("hit")){
+			if(intPlayerCardIndex < 5){
+				intPlayer[intPlayerCardIndex][0] = intShuffled[intDeckIndex][0]; // value
+				intPlayer[intPlayerCardIndex][1] = intShuffled[intDeckIndex][1]; // suit
+				intDeckIndex++;
+
+				// Check for bust
+				if (calculateHandValue(intPlayer) > 21) {
+					System.out.println("Player busted!");
+				}
+			}else{
+				System.out.println("Player already has 5 cards.");
+			}
+		}
+		
+		return intDeckIndex;
+	}
 }//class
 	
 

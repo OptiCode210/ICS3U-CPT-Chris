@@ -684,50 +684,19 @@ public class game{
 	}
 
 	public static int calculateWinnings(int[][] intPlayer, int[][] intDealer, int intBet){
-		
 		int intPlayerTotal = calculateHandValue(intPlayer);
 		int intDealerTotal = calculateHandValue(intDealer);
 		
-		//blackjack win
-		if(isBlackjack(intPlayer)){
-			System.out.println("Blackjack! 3x payout");
-			return intBet *3;
-		}
-		
-		//5 card special rule
-		if(isFiveCardSpecialRule(intPlayer)){
-			System.out.println("You win via 5 card special rule!");
-			return intBet *3;
-		}
-		
-		//bust
-		if(intPlayerTotal > 21){
-			System.out.println("Busted, bet lost");
-			return 0;
-		}
-		
-		//dealer bust
-		if (intDealerTotal > 21) {
-			System.out.println("Dealer busted! You win 2x your bet.");
-			return intBet * 2;
-		}
-		
-		//player has higher total
-		if (intPlayerTotal > intDealerTotal) {
-			System.out.println("You beat the dealer! You win 2x your bet.");
-			return intBet * 2;
-		}
+		if (isBlackjack(intPlayer)) return intBet * 3;         // Blackjack = 3x
+		if (isFiveCardSpecialRule(intPlayer)) return intBet * 3;
+		if (intPlayerTotal > 21) return 0;                     // Bust = lose all
+		if (intDealerTotal > 21) return intBet * 2;
+		if (intPlayerTotal > intDealerTotal) return intBet * 2;
+		if (intPlayerTotal == intDealerTotal) return intBet;   // Tie = bet returned
+		return 0;                                              // Dealer wins
 
-		// tie
-		if (intPlayerTotal == intDealerTotal) {
-			System.out.println("Tie! You get your bet back.");
-			return intBet;
-		}
-
-		//dealer has higher total
-		System.out.println("Dealer wins. You lose your bet.");
-		return 0;
 	}
+
 	
 	public static int countCards(int[][] hand) {
 		int count = 0;
@@ -745,7 +714,6 @@ public class game{
 	public static void blackjack(Console con) {
 		// load assets once
 		loadCards(con);
-		deckArray(con);
 
 		// assume intPlayerMoney set elsewhere
 		playAgain = true;
@@ -753,6 +721,7 @@ public class game{
 		// main game loop
 		while (playAgain && intPlayerMoney > 0) {
 			// reset for this hand
+			deckArray(con);
 			playAgain = false;
 			intBet = 0;
 			for (int i = 0; i < 5; i++) {
@@ -777,8 +746,25 @@ public class game{
 
 			// 4) double-down
 			int ddResult = doubleDownUI(con, intShuffled, intPlayer, imgCards, intDeckIndex);
-			if (ddResult == -1) continue;
+			if (ddResult == -1) {
+				// Double-down ended the round, handle payout here
+				String result = determineWinner(intPlayer, intDealer);
+				int winnings = calculateWinnings(intPlayer, intDealer, intBet);
+				intPlayerMoney += winnings;
+
+				if (result.equals("Player Wins")) {
+					winGraphics(con);
+				} else if (result.equals("Tie")) {
+					tieGraphics(con);
+				} else {
+					loseGraphics(con);
+				}
+				continue; // safely go to next round
+			}
 			intDeckIndex = ddResult;
+
+
+
 
 			// 5) hit/stand
 			int hsResult = hitStand(con, intShuffled, intPlayer, imgCards, intDeckIndex);
@@ -787,10 +773,21 @@ public class game{
 
 			// 6) dealer turn
 			intDeckIndex = dealerTurn(con, intShuffled, intDealer, imgCards, intDeckIndex);
+
 			// 7) outcome & payout
 			String result = determineWinner(intPlayer, intDealer);
-			int winnings = calculateWinnings(intPlayer, intDealer, intBet);
-			intPlayerMoney = intPlayerMoney - intBet + winnings;
+			int winnings = calculateWinnings(intPlayer, intDealer, intBet); // only call once
+			intPlayerMoney += winnings;
+
+			if (result.equals("Player Wins")) {
+				winGraphics(con);
+			} else if (result.equals("Tie")) {
+				tieGraphics(con);
+			} else {
+				loseGraphics(con);
+			}
+
+
 			
 			
 			if (result.equals("Player Wins")){
@@ -1090,47 +1087,41 @@ public class game{
 		}
 	}
 
-	public static int doubleDownUI(Console con,int[][] intShuffled,int[][] intPlayer,BufferedImage[] imgCards,int intDeckIndex) {
-		// only eligible on first two cards
-		if (!isDoubleDownEligible(intPlayer)) {
-			return intDeckIndex;
-		}
-
-		// wait for click on your Double Down button (index 2 → y = 100 + 2*100 = 300)
-		while (true) {
-			if (isClicked(con, 650, 300, 200, 50)) {
-				// highlight
-				bjRedButtons(con, "Double Down", 650, 300, 200, 50);
-				con.sleep(200);
-
-				// double the bet
-				intBet *= 2;
-
-				// deal exactly one more card into slot #2
-				int slot = 2;
-				int val  = intShuffled[intDeckIndex][0];
+	public static int doubleDownUI(Console con, int[][] intShuffled, int[][] intPlayer, BufferedImage[] imgCards, int intDeckIndex) {
+		if (isClicked(con, 650, 300, 200, 50)) {
+			con.sleep(200);
+			intBet *= 2;
+			int slot = 0;
+			for (; slot < intPlayer.length; slot++) {
+				if (intPlayer[slot][0] == 0) break;
+			}
+			if (slot < 5) {
+				// deal 1 card
+				int val = intShuffled[intDeckIndex][0];
 				int suit = intShuffled[intDeckIndex][1];
 				intPlayer[slot][0] = val;
 				intPlayer[slot][1] = suit;
-
-				// draw that card (using your offsets)
 				int idx = (suit - 1) * 13 + (val - 1);
-				int x   = 200 + (-90) + slot * 70;
-				int y   = 400 + 110  + slot * 30;
+				int x = 200 - 90 + slot * 70;
+				int y = 400 + 110 + slot * 30;
 				con.drawImage(imgCards[idx], x, y);
 				con.repaint();
 				con.sleep(200);
+				intDeckIndex++;
 
-				// force skip of normal hit/stand
-				return -1;
+				// bust check
+				if (calculateHandValue(intPlayer) > 21) {
+					con.sleep(1000);
+					loseGraphics(con);
+					return -1;
+				}
+
+				// no bust → dealer plays immediately
+				dealerTurn(con, intShuffled, intDealer, imgCards, intDeckIndex);
+				return -1; // tells blackjack() to skip hitStand()
 			}
-			// if they click Hit or Stand instead, just fall through
-			if (isClicked(con, 650, 100, 200, 50) ||
-				isClicked(con, 650, 200, 200, 50)) {
-				return intDeckIndex;
-			}
-			con.sleep(20);
 		}
+		return intDeckIndex;
 	}
 
 	public static int dealerTurn(Console con,int[][] intShuffled,int[][] intDealer,BufferedImage[] imgCards,int intDeckIndex) {

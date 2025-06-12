@@ -3,3 +3,4 @@ Chris2 - 4500
 Chris3 - 5000
 Yoda - 29792
 Anakin - 1000000
+Chris - 4500

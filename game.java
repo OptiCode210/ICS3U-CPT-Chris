@@ -12,19 +12,23 @@ public class game{
 	public static BufferedImage imgDeck;
 	public static int intPlayerMoney = 5000;
 	public static int intBet = 0;
+	public static boolean playAgain = false;
 	//create decks
 	public static int[][] intDeck = new int[52][3];
 	public static int[][] intShuffled = new int[52][3];	
 	//hands
 	public static int[][] intPlayer = new int[5][2];
 	public static int[][] intDealer = new int[5][2];
+	
+	//static variablespublic static final int BTN_X = 500;
+
 
 	public static void main(String args[]){		//main program:
 		Console con = new Console(1000,800);
 		
 		//calls the main menu method
 		//game.game(con);
-		blackjack(con);
+		startGame(con);
 	}
 	
 	//mouse click program
@@ -751,7 +755,20 @@ public class game{
 		bjBetInterface(con);
 		bets(con);
 		
-		dealInitialCards(intShuffled, intPlayer, intDealer);
+		intPlayer[0][0] = 1;    // Ace
+		intPlayer[0][1] = 4;    // Spades
+
+		intPlayer[1][0] = 13;   // King
+		intPlayer[1][1] = 4;    // Spades
+
+		// 🎯 Force Dealer: Any non-blackjack hand
+		intDealer[0][0] = 9;
+		intDealer[0][1] = 2;
+
+		intDealer[1][0] = 7;
+		intDealer[1][1] = 3;
+		
+		//dealInitialCards(intShuffled, intPlayer, intDealer);
 		drawInitialDeal(con, intPlayer, intDealer, imgCards);
 		if(checkInitialBJ(con)) return;
 	}
@@ -828,34 +845,147 @@ public class game{
 	}
 
 	public static boolean checkInitialBJ(Console con){
-		 boolean roundEnded = false;
+		boolean roundEnded = false;
 
 		if (isBlackjack(intPlayer)) {
-			intPlayerMoney += intBet * 2; // +2x profit
+			if (isBlackjack(intDealer)) {
+				intPlayerMoney += intBet; // return bet
+				tieGraphics(con);         // both have blackjack → tie
+			} else {
+				intPlayerMoney += intBet * 2; // +2x profit
+				winGraphics(con);             // player wins
+			}
 			roundEnded = true;
-			endRoundGraphics(con);
-		} else if(isBlackjack(intDealer)){
+		} else if (isBlackjack(intDealer)) {
+			// flip dealer’s 2nd card
 			int valD2 = intDealer[1][0];
 			int suitD2 = intDealer[1][1];
 			int cardIndex = (suitD2 - 1) * 13 + (valD2 - 1);
 			con.drawImage(imgCards[cardIndex], 270, 150);
 			con.repaint();
 			con.sleep(500);
-			
+
 			if (isBlackjack(intPlayer)) {
-				// Tie
 				intPlayerMoney += intBet; // return bet
+				tieGraphics(con);
 			} else {
-				//player loses everything
+				loseGraphics(con); // player loses
 			}
 			roundEnded = true;
 		}
-		
+
 		return roundEnded;
 	}
 
-	public static void endRoundGraphics(Console con){
-		con.println("graphics here");
+	public static void loseGraphics(Console con) {
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/logicbg.jpeg"
+		);
+		con.drawImage(imgBackground, 0, 0);
+
+		// Draw "You Lose" text
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
+		con.setDrawColor(Color.RED);
+		con.drawString("You Lost!", 350, 200);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("Final amount: " + intPlayerMoney, 100, 600);
+
+		// Draw buttons
+		drawEndButtons(con);
+
+		con.repaint();
+		while (true) {
+			if (isClicked(con, 400, 400, 150, 50)) { // Play Again
+				playAgain = true;
+				break;
+			} else if (isClicked(con, 400, 500, 150, 50)) { // Quit
+				TextOutputFile ldb = new TextOutputFile("leaderboard.txt", true);
+				ldb.println(strPlayerName + " - " + intPlayerMoney);
+				ldb.close();
+				con.sleep(500);
+				quitGame(con);
+				break;
+			}
+			con.sleep(20);
+		}
 	}
+	
+	public static void tieGraphics(Console con) {
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/logicbg.jpeg"
+		);
+		con.drawImage(imgBackground, 0, 0);
+
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
+		con.setDrawColor(Color.YELLOW);
+		con.drawString("It's a Tie!", 350, 200);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("Final amount: " + intPlayerMoney, 100, 600);
+	
+		drawEndButtons(con);
+		con.repaint();
+		
+		while (true) {
+			if (isClicked(con, 400, 400, 150, 50)) { // Play Again
+				playAgain = true;
+				break;
+			} else if (isClicked(con, 400, 500, 150, 50)) { // Quit
+				TextOutputFile ldb = new TextOutputFile("leaderboard.txt", true);
+				ldb.println(strPlayerName + " - " + intPlayerMoney);
+				ldb.close();
+				con.sleep(500);
+				quitGame(con);
+				break;
+			}
+			con.sleep(20);
+		}
+	}
+
+	public static void winGraphics(Console con) {
+		BufferedImage imgBackground = con.loadImage(
+			"/Users/chrislau/Documents/GitHub/ICS3U-CPT-Chris/media/logicbg.jpeg"
+		);
+		con.drawImage(imgBackground, 0, 0);
+
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 60));
+		con.setDrawColor(Color.GREEN);
+		con.drawString("You Win!", 350, 200);
+		con.setDrawColor(Color.WHITE);
+		con.drawString("Final amount: " + intPlayerMoney, 100, 600);
+
+		drawEndButtons(con);
+		con.repaint();
+		
+		while (true) {
+			if (isClicked(con, 400, 400, 150, 50)) { // Play Again
+				playAgain = true;
+				break;
+			} else if (isClicked(con, 400, 500, 150, 50)) { // Quit
+				TextOutputFile ldb = new TextOutputFile("leaderboard.txt", true);
+				ldb.println(strPlayerName + " - " + intPlayerMoney);
+				ldb.close();
+				con.sleep(500);
+				quitGame(con);
+				break;
+			}
+			con.sleep(20);
+		}
+	}
+
+	public static void drawEndButtons(Console con) {
+		con.setDrawColor(new Color(71, 237, 129)); // Green button
+
+		// Play Again
+		con.fillRoundRect(400, 400, 150, 50, 30, 30);
+		// Quit
+		con.fillRoundRect(400, 500, 150, 50, 30, 30);
+
+		con.setDrawColor(Color.BLACK);
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.drawString("   Again", 400, 400);
+		con.drawString("Quit", 370 + 80, 500);
+		
+	}
+
 
 }//class

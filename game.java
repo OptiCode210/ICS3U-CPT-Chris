@@ -519,32 +519,14 @@ public class game{
 			con.repaint();
 	}
 	
-	public static void blackjack(Console con){		//main method
+	public static void blackjack(Console con) {
+		// Setup deck and hands
 		loadCards(con);
 		deckArray(con);
-		dealInitialCards(intShuffled, intPlayer, intDealer);
 		
-		int intPlayerTotal = calculateHandValue(intPlayer);
-		int intDealerTotal = calculateHandValue(intDealer);
-		
-		int intDeckIndex = 4;
-		
-		intDeckIndex = dealerPlay(intShuffled, intDealer, intDeckIndex);
-		
-		 System.out.println("DEALER FINAL HAND:");
-		for (int i = 0; i < intDealer.length; i++) {
-			if (intDealer[i][0] != 0) {
-				System.out.println("Card " + (i + 1) + ": Value = " + intDealer[i][0] + ", Suit = " + intDealer[i][1]);
-			}
-		}
-		
-		intDealerTotal = calculateHandValue(intDealer);
-		System.out.println("Final Dealer Total: " + intDealerTotal);
-		
-		String strResult = determineWinner(intPlayer, intDealer);
-		System.out.println("Result: " + strResult);
+		int intPlayerMoney = 5000; // starting money
 
-	}// blackjack method
+	}
 	
 	public static void dealInitialCards(int[][] intShuffled, int[][] intPlayer, int[][] intDealer) {
 		//use method 
@@ -682,8 +664,76 @@ public class game{
 		
 		return intDeckIndex;
 	}
+
+	public static boolean isFiveCardSpecialRule(int[][] hand){
+		return calculateHandValue(hand) <= 21 && countCards(hand) == 5;
+	}
+	
+	public static boolean isBlackjack(int[][] hand) {
+		return calculateHandValue(hand) == 21 && countCards(hand) == 2;
+	}
+
+	public static boolean isDoubleDownEligible(int[][] hand) {
+		int total = calculateHandValue(hand);
+		return (countCards(hand) == 2 && (total == 9 || total == 10 || total == 11));
+	}
+
+	public static int calculateWinnings(int[][] intPlayer, int[][] intDealer, int intBet){
+		
+		int intPlayerTotal = calculateHandValue(intPlayer);
+		int intDealerTotal = calculateHandValue(intDealer);
+		
+		//blackjack win
+		if(isBlackjack(intPlayer)){
+			System.out.println("Blackjack! 3x payout");
+			return intBet *3;
+		}
+		
+		//5 card special rule
+		if(isFiveCardSpecialRule(intPlayer)){
+			System.out.println("You win via 5 card special rule!");
+			return intBet *3;
+		}
+		
+		//bust
+		if(intPlayerTotal > 21){
+			System.out.println("Busted, bet lost");
+			return 0;
+		}
+		
+		//dealer bust
+		if (intDealerTotal > 21) {
+			System.out.println("Dealer busted! You win 2x your bet.");
+			return intBet * 2;
+		}
+		
+		//player has higher total
+		if (intPlayerTotal > intDealerTotal) {
+			System.out.println("You beat the dealer! You win 2x your bet.");
+			return intBet * 2;
+		}
+
+		// tie
+		if (intPlayerTotal == intDealerTotal) {
+			System.out.println("Tie! You get your bet back.");
+			return intBet;
+		}
+
+		//dealer has higher total
+		System.out.println("Dealer wins. You lose your bet.");
+		return 0;
+	}
+	
+	public static int countCards(int[][] hand) {
+		int count = 0;
+
+		// Loop through the hand and count cards with a non-zero value
+		for (int i = 0; i < hand.length; i++) {
+			if (hand[i][0] != 0) {
+				count++;
+			}
+		}
+
+		return count;
+	}
 }//class
-	
-
-	
-

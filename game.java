@@ -540,6 +540,10 @@ public class game{
 		
 		intDealerTotal = calculateHandValue(intDealer);
 		System.out.println("Final Dealer Total: " + intDealerTotal);
+		
+		String strResult = determineWinner(intPlayer, intDealer);
+		System.out.println("Result: " + strResult);
+
 	}// blackjack method
 	
 	public static void dealInitialCards(int[][] intShuffled, int[][] intPlayer, int[][] intDealer) {
@@ -627,7 +631,20 @@ public class game{
 		
 	}
 	
-
+	public static String determineWinner(int[][] intPlayer, int[][] intDealer){
+		int intPlayerTotal = calculateHandValue(intPlayer);
+		int intDealerTotal = calculateHandValue(intDealer);
+		
+		if(intPlayerTotal > 21) return "Player Loses";
+		if(intDealerTotal > 21) return "Player Wins";
+		
+		//compare totals
+		if(intPlayerTotal > intDealerTotal) return "Player Wins";
+		if(intPlayerTotal < intDealerTotal) return "Player Loses";
+		
+		return "Tie";
+	}
+	
 }//class
 	
 

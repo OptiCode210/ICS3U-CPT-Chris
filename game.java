@@ -515,8 +515,7 @@ public class game{
 
 			con.setDrawColor(Color.BLACK);
 			for (int intI = 0; intI < arrButtonName.length; intI++) {
-				int y = intY + intI * intSpace;
-				// center text at about half the button height (50/2 = 25), tweak +5 for baseline  
+				int y = intY + intI * intSpace; 
 				int yText = y + 5;
 				con.drawString(arrButtonName[intI], intX + 10, yText);
 			}
@@ -763,12 +762,14 @@ public class game{
 
 			// 1) betting
 			bjBetInterface(con);
+			drawMoney(con);
 			bets(con);
+			
 
 			// 2) deal & animate
 			dealInitialCards(intShuffled, intPlayer, intDealer);
 			drawInitialDeal(con, intPlayer, intDealer, imgCards);
-
+			
 			// 3) check blackjack
 			if (checkInitialBJ(con)) continue;
 
@@ -786,12 +787,12 @@ public class game{
 
 			// 6) dealer turn
 			intDeckIndex = dealerTurn(con, intShuffled, intDealer, imgCards, intDeckIndex);
-
 			// 7) outcome & payout
 			String result = determineWinner(intPlayer, intDealer);
 			int winnings = calculateWinnings(intPlayer, intDealer, intBet);
 			intPlayerMoney = intPlayerMoney - intBet + winnings;
-
+			
+			
 			if (result.equals("Player Wins")){
 			    winGraphics(con);
 			}else if(result.equals("Tie")){
@@ -804,7 +805,7 @@ public class game{
 
 		// if busted out of money
 		if (intPlayerMoney <= 0) {
-			loseGraphics(con);  // or a custom game-over screen
+			loseGraphics(con); 
 		}
 	}
 
@@ -813,6 +814,7 @@ public class game{
 		while(intBet == 0){
 			if(isClicked(con, 650, 400, 150, 50)){ //10%
 				intBet = Math.max(1, (int)(intPlayerMoney * 0.10));
+				bjBetInterface(con);
 				System.out.println("10% button clicked: " + intBet);
 				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
 				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
@@ -820,6 +822,7 @@ public class game{
 				bjRedButtons(con,"  All In" ,650,700,150,50);
 			}else if(isClicked(con, 650, 500, 150, 50)){  //30%
 				intBet = Math.max(1, (int)(intPlayerMoney * 0.30));
+				bjBetInterface(con);
 				System.out.println("30% button clicked: " + intBet);
 				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
 				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
@@ -827,6 +830,7 @@ public class game{
 				bjRedButtons(con,"  All In" ,650,700,150,50);
 			}else if (isClicked(con, 650, 600, 150, 50)) { //50%
 				intBet = Math.max(1, (int)(intPlayerMoney * 0.60));
+				bjBetInterface(con);
 				System.out.println("60% button clicked: " + intBet);
 				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
 				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
@@ -834,6 +838,7 @@ public class game{
 				bjRedButtons(con,"  All In" ,650,700,150,50);
 			}else if(isClicked(con, 650, 700, 150, 50)){
 				intBet = Math.max(1, (int)(intPlayerMoney));
+				bjBetInterface(con);
 				System.out.println("All in button clicked: " + intBet);
 				bjRedButtons(con,"  Bet 10%" ,650,400,150,50);
 				bjRedButtons(con,"  Bet 30%" ,650,500,150,50);
@@ -844,9 +849,11 @@ public class game{
 			con.sleep(20);
 		}
 		
+		
 		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
 		con.setDrawColor(Color.WHITE);
 		intPlayerMoney -= intBet;
+		con.setDrawColor(Color.WHITE);
 		con.drawString(""+intBet, 120, 100);
 		con.drawString(""+(intPlayerMoney), 190, 50);
 		con.repaint();
@@ -892,7 +899,7 @@ public class game{
 			if (isBlackjack(intDealer)) {
 				intPlayerMoney += intBet; // return bet
 				con.sleep(1500);
-				tieGraphics(con);         // both have blackjack → tie
+				tieGraphics(con);         // both have blackjack > tie
 			} else {
 				intPlayerMoney += intBet * 3;
 				con.sleep(1500);
@@ -904,7 +911,7 @@ public class game{
 			int valD2 = intDealer[1][0];
 			int suitD2 = intDealer[1][1];
 			int cardIndex = (suitD2 - 1) * 13 + (valD2 - 1);
-			con.drawImage(imgCards[cardIndex], 270, 150);
+			con.drawImage(imgCards[cardIndex], 270, 250);
 			con.repaint();
 			con.sleep(500);
 
@@ -1127,49 +1134,56 @@ public class game{
 	}
 
 	public static int dealerTurn(Console con,int[][] intShuffled,int[][] intDealer,BufferedImage[] imgCards,int intDeckIndex) {
-		int xOffset = -90;
-		int yOffset = 110;
+		int xOffset = -90, yOffset = 110;
+		int baseX   = 200 + xOffset;
+		int baseY   = 150 + yOffset;
 
+		// reveal the face‐down card
 		int val2  = intDealer[1][0];
 		int suit2 = intDealer[1][1];
 		int idx2  = (suit2 - 1) * 13 + (val2 - 1);
 		int flipX = 270 + xOffset + 10;
 		int flipY = 150 + yOffset + 10;
-
 		con.drawImage(imgCards[idx2], flipX, flipY);
 		con.repaint();
 		con.sleep(500);
 
-		int overlap = 40;
-		int baseX   = 200 + xOffset;
-		int baseY   = 150 + yOffset;
-
+		// now hit until 17+
 		while (calculateHandValue(intDealer) < 17) {
-			// find next empty slot
-			int slot = 0;
-			for (; slot < intDealer.length; slot++) {
-				if (intDealer[slot][0] == 0) break;
-			}
+			// **start searching at slot 2 so we never re‐draw slot 1**
+			int slot = 2;
+			while (slot < intDealer.length && intDealer[slot][0] != 0) slot++;
 
-			// deal one card
-			int val  = intShuffled[intDeckIndex][0];
-			int suit = intShuffled[intDeckIndex][1];
-			intDealer[slot][0] = val;
-			intDealer[slot][1] = suit;
+			// deal one card into that slot
+			int v = intShuffled[intDeckIndex][0];
+			int s = intShuffled[intDeckIndex][1];
+			intDealer[slot][0] = v;
+			intDealer[slot][1] = s;
+			intDeckIndex++;
 
-			// draw it with overlap
-			int idx   = (suit - 1) * 13 + (val - 1);
-			int xPos  = baseX + slot * overlap;
+			// draw it side by side (70px apart)
+			int idx   = (s - 1) * 13 + (v - 1);
+			int xPos  = baseX + slot * 70 + 10;
 			int yPos  = baseY;
 			con.drawImage(imgCards[idx], xPos, yPos);
 			con.repaint();
-
-			intDeckIndex++;
 			con.sleep(500);
 		}
 
 		return intDeckIndex;
 	}
+
+	public static void drawMoney(Console con) {
+		con.setDrawFont(new Font("Times New Roman", Font.BOLD, 30));
+		con.setDrawColor(Color.WHITE);
+		con.drawString("" + intPlayerMoney, 190, 50);
+		con.repaint();
+	}
+
+
+
+
+
 
 
 
